@@ -1,0 +1,17 @@
+FRONTEND:
+Login,
+Registracija,
+Prikaz Objava
+	- search bar
+	- objava
+	- gumb za like - ako je likeano moze povuci like
+	- kucica za komentar
+Prikaz vlastitog/tudeg profila
+	- na vlastitom profilu se prikazuju vlastite objave i moguce ih je uređivati
+Forma za izradu objave - probat drag and drop slike
+
+BACKEND:
+Login
+Search korisnika
+Postovi sortirani prema ljudima koje prate
+Custom responses da ne bi slao previse podataka

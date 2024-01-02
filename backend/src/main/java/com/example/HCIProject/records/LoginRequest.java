@@ -1,7 +1,6 @@
 package com.example.HCIProject.records;
 
-public record RegistrationRequest(
-        String email,
+public record LoginRequest(
         String username,
         String password
 ) {

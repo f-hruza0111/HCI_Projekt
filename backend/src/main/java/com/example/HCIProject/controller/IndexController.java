@@ -1,10 +1,7 @@
 package com.example.HCIProject.controller;
 
 import com.example.HCIProject.entity.Post;
-import com.example.HCIProject.records.CreatePostRequest;
-import com.example.HCIProject.records.LikeRequest;
-import com.example.HCIProject.records.PostCommentRequest;
-import com.example.HCIProject.records.RegistrationRequest;
+import com.example.HCIProject.records.*;
 import com.example.HCIProject.service.PostsService;
 import com.example.HCIProject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +15,26 @@ public class IndexController {
     private final PostsService postsService;
     private final UserService userService;
 
+    @PostMapping("/login")
+    public String login(LoginRequest request){
+        return "Login endpoint";
+    }
+
     @GetMapping("/posts")
     List<Post> getAllPosts(){
 
         //todo paging i sortiranje po followerima
-        // h2 baza cudna
+
 
         return postsService.getAllPosts();
     }
 
-    @PostMapping("/posts")
+    @PostMapping("/post")
     void createPost(CreatePostRequest request){
         postsService.createPost(request);
     }
 
-    @PutMapping("/posts")
+    @PutMapping("/post")
     void editPost(@RequestParam Long postID, CreatePostRequest postRequest){
         postsService.editPost(postRequest, postID);
     }

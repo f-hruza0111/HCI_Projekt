@@ -1,7 +1,7 @@
 package com.example.HCIProject.repository;
 
-import com.example.HCIProject.entity.User;
+import com.example.HCIProject.entity.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<AppUser, Long> {
 }

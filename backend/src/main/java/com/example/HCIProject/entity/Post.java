@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,18 +27,18 @@ public class Post {
 //    private List<Byte[]> images;
 
     @ManyToOne
-    private User creator;
+    private AppUser creator;
 
     @OneToMany
     private List<BlogComment> comments;
 
     @OneToMany
-    private List<User> likes;
+    private List<AppUser> likes;
 
     private LocalDate createdOn;
     private LocalDate lastEdited;
 
-    public Post(String blogPost, List<Byte[]> images, User creator, LocalDate createdOn, LocalDate lastEdited) {
+    public Post(String blogPost, List<Byte[]> images, AppUser creator, LocalDate createdOn, LocalDate lastEdited) {
         this.blogPost = blogPost;
 //        this.images = images;
         this.creator = creator;

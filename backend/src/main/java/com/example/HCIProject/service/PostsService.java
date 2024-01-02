@@ -1,8 +1,8 @@
 package com.example.HCIProject.service;
 
+import com.example.HCIProject.entity.AppUser;
 import com.example.HCIProject.entity.BlogComment;
 import com.example.HCIProject.entity.Post;
-import com.example.HCIProject.entity.User;
 import com.example.HCIProject.records.CreatePostRequest;
 import com.example.HCIProject.records.LikeRequest;
 import com.example.HCIProject.records.PostCommentRequest;
@@ -27,7 +27,7 @@ public class PostsService {
     }
 
     public void createPost(CreatePostRequest request) {
-        User creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
+        AppUser creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
 
         Post post = Post.builder()
                 .creator(creator)
@@ -50,7 +50,7 @@ public class PostsService {
     }
 
     public void addComment(PostCommentRequest request) {
-        User creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
+        AppUser creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
         Post post = postRepository.findById(request.postID()).orElseThrow(() -> new IllegalStateException("Post not found"));
 
         BlogComment comment = BlogComment.builder()
@@ -66,7 +66,7 @@ public class PostsService {
     }
 
     public void editComment(PostCommentRequest request, Long commentID) {
-        User creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
+        AppUser creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
 
         BlogComment comment = commentRepository.findById(commentID).orElseThrow(() -> new IllegalStateException("Comment not found"));
         if(!comment.getCreator().equals(creator)) throw new IllegalStateException("This comment was not created by this creator");
@@ -80,16 +80,22 @@ public class PostsService {
     }
 
     public void likePost(LikeRequest request) {
-        User liked = userRepository.findById(request.userID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
+        AppUser liked = userRepository.findById(request.userID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
         Post post = postRepository.findById(request.contentID()).orElseThrow(() -> new IllegalStateException("Post not found"));
 
-        post.getLikes().add(liked);
+        List<AppUser> likes = post.getLikes();
+        if(likes.contains(liked)) {
+            likes.remove(liked);
+        } else {
+            likes.add(liked);
+        }
+
 
         postRepository.save(post);
     }
 
     public void likeComment(LikeRequest request) {
-        User liked = userRepository.findById(request.userID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
+        AppUser liked = userRepository.findById(request.userID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
         BlogComment comment = commentRepository.findById(request.contentID()).orElseThrow(() -> new IllegalStateException("Post not found"));
 
         comment.getLikes().add(liked);

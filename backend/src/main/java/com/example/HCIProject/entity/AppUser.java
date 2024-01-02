@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class AppUser {
     @Id
     @GeneratedValue
     private Long id;
@@ -22,23 +22,29 @@ public class User {
 
     @Column(unique = true)
     private String username;
+
+    @Column(unique = true)
+    private String email;
+
     private String password;
 
     @OneToMany(mappedBy = "creator")
     private List<Post> posts;
 
     @OneToMany
-    private List<User> following;
+    private List<AppUser> following;
 
-    public User(Long id, String username, String password) {
+    public AppUser(Long id, String email, String username, String password) {
         this.id = id;
         this.username = username;
+        this.email = email;
         this.password = password;
         this.posts = new ArrayList<>();
         this.following = new ArrayList<>();
     }
 
-    public User(String username, String password, List<Post> posts, List<User> following) {
+    public AppUser(String email, String username, String password, List<Post> posts, List<AppUser> following) {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.posts = posts;

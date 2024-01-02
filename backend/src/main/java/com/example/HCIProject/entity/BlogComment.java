@@ -24,16 +24,16 @@ public class BlogComment {
     private String content;
 
     @OneToMany
-    private List<User> likes;
+    private List<AppUser> likes;
 
     @ManyToOne
-    private User creator;
+    private AppUser creator;
 
     private LocalDate createdOn;
 
     private LocalDate lastEdited;
 
-    public BlogComment(String content, List<User> likes, User creator) {
+    public BlogComment(String content, List<AppUser> likes, AppUser creator) {
         this.content = content;
         this.likes = likes;
         this.creator = creator;
