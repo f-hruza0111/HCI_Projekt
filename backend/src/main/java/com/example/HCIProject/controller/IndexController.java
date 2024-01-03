@@ -5,8 +5,12 @@ import com.example.HCIProject.records.*;
 import com.example.HCIProject.service.PostsService;
 import com.example.HCIProject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 @RestController("/home")
@@ -30,7 +34,9 @@ public class IndexController {
     }
 
     @PostMapping("/post")
-    void createPost(CreatePostRequest request){
+    void createPost(@RequestParam("file") MultipartFile file, CreatePostRequest request) throws IOException {
+        byte[] imageData = file.getBytes();
+
         postsService.createPost(request);
     }
 
@@ -39,9 +45,14 @@ public class IndexController {
         postsService.editPost(postRequest, postID);
     }
 
+    /**
+     * Radi i daje error za duplikate
+     * @param request
+     * @return
+     */
     @PostMapping("/registration")
-    void registerUser(RegistrationRequest request){
-        userService.registerUser(request);
+    ResponseEntity<?> registerUser(@RequestBody RegistrationRequest request){
+        return ResponseEntity.created(URI.create(String.valueOf(userService.registerUser(request)))).build();
     }
 
     @PostMapping("/comment")

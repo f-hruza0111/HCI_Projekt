@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bad Access Control</title>
+    <title>Registration</title>
     <%- include('./partials/bootstrap') %>
 </head>
 <body>
     <%- include('./partials/navbar') %>
 
+    <% if(err) { %>
+        <div class="alert alert-danger" role="alert">
+            <%=err%>
+        </div>
+    <% } %>
 
     <form class="col-lg-6 offset-lg-3 " method="post" id="form">
 
@@ -33,10 +38,13 @@
             <label for="repeat-password">
                 Repeat Password
             </label>
-            <input class="form-control" type="password" name="repeat-password">
+            <input class="form-control" type="password" name="repeat_password">
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="form-group">
+        <button type="submit" class="btn btn-primary">Register</button>
+           
+        </div>
     </form>
 
     

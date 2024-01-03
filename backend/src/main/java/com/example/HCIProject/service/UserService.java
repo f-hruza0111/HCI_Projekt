@@ -12,14 +12,14 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void registerUser(RegistrationRequest request) {
+    public Long registerUser(RegistrationRequest request) {
         AppUser newAppUser = AppUser.builder()
                 .email(request.email())
                 .username(request.username())
                 .password(request.password())
                 .build();
 
-        userRepository.save(newAppUser);
+        return  userRepository.save(newAppUser).getId();
     }
 
     public void follow(Long creatorID, Long userID) {

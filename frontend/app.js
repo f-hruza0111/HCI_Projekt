@@ -1,4 +1,6 @@
 const express = require("express")
+const session = require("express-session")
+const bodyParser = require('body-parser')
 const { access } = require("fs")
 const path = require("path")
 const axios = require('axios').default
@@ -17,6 +19,14 @@ const baseURL = externalUrl || `http://localhost:${port}`
 
 const app = express();
 
+app.use(session({secret: process.env.SESSION_SECRET}))
+
+
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
 
 app.use(express.json()); 
 app.use(express.urlencoded({extended: true})); 
@@ -24,14 +34,11 @@ app.use(express.urlencoded({extended: true}));
 app.set('views', './views')
 app.set('view engine', 'ejs');
 
-app.use((req, res, next) => {
-    console.log(new Date().toLocaleString() + " " + req.url);
-    next();
-});
-
-
 
 app.use(express.static(path.join(__dirname, "views")));
+
+
+//TODO: OVO JE SAM TU STAVLJENO OKVIRNO
 
 app.get("/", function (req, res) {
     let posts = {}
@@ -47,6 +54,51 @@ app.get("/", function (req, res) {
     res.render('index', {posts: posts})
 });
 
+app.get("/registration",  function (req, res) {
+    // console.log("Rendering Registraion Page")
+    res.render('registration', {err:undefined})
+})
+
+
+//RADI
+app.post("/registration",  async function (req, res) {
+    var err = null
+    if(req.body.password !== req.body.repeat_password){
+        err = "Passwords dont match!"
+    } else {
+      await axios.post(restAPIURL + '/registration', {
+            email: req.body.email,
+            username: req.body.username,
+            password: req.body.password
+        })
+        .then(response => {
+            console.log("Location: " + response.headers.location)
+            console.log("Data: " + response.data)
+            if(response.status != 201){
+                err = response.data
+            } 
+        })
+        .catch(error => {
+            console.log(error.response.data)
+            err = error.response.data
+        })
+    }
+    
+    if(err){
+        console.log(err)
+        res.render('registration', {err: err} )
+    } else {
+        res.redirect('/')
+    }
+    
+})
+
+app.get("/login",  function (req, res) {
+    res.render('login')
+})
+
+//posalji credentials
+//spremi JWT tokene u session
 app.post("/login",  function (req, res) {
     
 })
