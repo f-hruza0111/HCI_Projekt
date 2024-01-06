@@ -9,7 +9,11 @@
 <body>
     <%- include('./partials/navbar') %>
 
-
+    <% if(err) { %>
+        <div class="alert alert-danger" role="alert">
+            <%=err%>
+        </div>
+    <% } %>
     <form class="col-lg-6 offset-lg-3 " method="post" id="form">
 
         <div class="form-group">

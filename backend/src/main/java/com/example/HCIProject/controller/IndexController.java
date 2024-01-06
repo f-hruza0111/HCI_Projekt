@@ -1,10 +1,13 @@
 package com.example.HCIProject.controller;
 
+import com.example.HCIProject.entity.AppUser;
 import com.example.HCIProject.entity.Post;
 import com.example.HCIProject.records.*;
 import com.example.HCIProject.service.PostsService;
 import com.example.HCIProject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,8 +23,10 @@ public class IndexController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public String login(LoginRequest request){
-        return "Login endpoint";
+    public ResponseEntity<Long> login(@RequestBody LoginRequest request){
+        Long id = userService.verifyUser(request);
+        HttpStatus status = id == -1 ? HttpStatus.FORBIDDEN : HttpStatus.OK;
+       return new ResponseEntity<>(id, status);
     }
 
     @GetMapping("/posts")
@@ -33,15 +38,14 @@ public class IndexController {
         return postsService.getAllPosts();
     }
 
-    @PostMapping("/post")
-    void createPost(@RequestParam("file") MultipartFile file, CreatePostRequest request) throws IOException {
-        byte[] imageData = file.getBytes();
-
-        postsService.createPost(request);
+    @PostMapping(path = "/post")
+    void createPost( @RequestParam("image") MultipartFile image) throws IOException {
+        System.out.println(image.getName());
+//        postsService.createPost(request, image);
     }
 
     @PutMapping("/post")
-    void editPost(@RequestParam Long postID, CreatePostRequest postRequest){
+    void editPost(@RequestParam Long postID, @RequestBody CreatePostRequest postRequest, @RequestPart MultipartFile image){
         postsService.editPost(postRequest, postID);
     }
 
@@ -77,5 +81,16 @@ public class IndexController {
     @PostMapping("/follow")
     void followCreator(Long creatorID, Long userID){
         userService.follow(creatorID, userID);
+    }
+
+
+    @GetMapping("/profile/{id}")
+    ResponseEntity<ProfileResponse> getProfile(@PathVariable Long id){
+        return ResponseEntity.ok(userService.getProfile(id));
+    }
+
+    @GetMapping("/users")
+    List<AppUser> getAllUsers(){
+        return userService.getAllUsers();
     }
 }

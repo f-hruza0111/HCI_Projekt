@@ -11,6 +11,7 @@ import com.example.HCIProject.repository.PostRepository;
 import com.example.HCIProject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,17 +27,20 @@ public class PostsService {
         return postRepository.findAll();
     }
 
-    public void createPost(CreatePostRequest request) {
+    public void createPost(CreatePostRequest request, MultipartFile image) {
         AppUser creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
 
-        Post post = Post.builder()
-                .creator(creator)
-                .blogPost(request.content())
-//                .images(request.images())
-                .createdOn(LocalDate.now())
-                .build();
 
-        postRepository.save(post);
+
+
+//        Post post = Post.builder()
+//                .creator(creator)
+//                .blogPost(request.content())
+////                .images(request.images())
+//                .createdOn(LocalDate.now())
+//                .build();
+//
+//        postRepository.save(post);
     }
 
     public void editPost(CreatePostRequest request, Long postID){

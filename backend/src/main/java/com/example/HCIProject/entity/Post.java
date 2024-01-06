@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class Post {
     @Column(length = 5000)
     private String blogPost;
 
-//    private List<Byte[]> images;
+    private File image;
 
     @ManyToOne
     private AppUser creator;

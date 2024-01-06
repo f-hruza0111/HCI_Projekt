@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create and edit post</title>
+    <%- include('./partials/bootstrap') %>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+
+   <link rel="stylesheet" href="css/style.css"> 
+</head>
+<body>
+    <%- include('./partials/navbar') %>
+
+    <% if(err) { %>
+        <div class="alert alert-danger" role="alert">
+            <%=err%>
+        </div>
+    <% } %>
+    <form class="col-lg-6 offset-lg-3 " id="form">
+
+        <div class="container mt-5">
+            <label for="file-input" id="input-container">
+                <input type="file" accept="image/*"  id="file-input" hidden>
+                <div  class="droparea mb-4">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p class="mb-2">Drag and drop an image here or click to select one</p>
+                </div>
+                <canvas id="canvas"></canvas>
+            </label>         
+        </div>
+
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" class="form-control">        
+        </div>
+        
+        <div class="form-group">
+            <label for="textarea">
+                Whats on your mind?
+              </label>
+            
+            <textarea class="form-control" id="textarea" rows="6"></textarea>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Create post</button>
+        </div>
+    </form>
+
+
+
+   <script>
+        const initApp = () => {
+            const droparea = document.querySelector('.droparea')
+            const fileInput = document.getElementById('file-input');
+            const imagePreviewContainer = document.getElementById('image-preview-container');
+            const uploadedImage = document.getElementById('uploaded-image');
+            const inputContainer = document.getElementById('input-container')
+            const canvas = document.getElementById('canvas')
+            const form = document.getElementById('form')
+            const title = document.getElementById('title')
+            const content = document.getElementById('textarea')
+            const file = document.getElementById('file-input')
+
+
+            canvas.style.display = "none"
+
+            const active = () => droparea.classList.add("blue-border")
+
+            const inactive = () => droparea.classList.remove("blue-border")
+
+            const prevents = (e) => e.preventDefault();
+
+
+            const handleDrop = (e) => {
+                const dt = e.dataTransfer
+                const files = dt.files;
+                const fileArray = [...files]
+                // console.log(files)
+                console.log(fileArray)
+
+                const file = fileArray[0]
+                
+                // console.log(imageFile)
+                const image = new Image()
+                image.src = URL.createObjectURL(file)
+
+                image.onload = function() {
+                    // console.log("Image upload")
+                    pictureUploaded = true
+                    canvas.style.display = "block"
+                    
+                    var ctx = canvas.getContext('2d')
+                    ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+                }   
+            }
+    
+
+            ['dragenter', 'dragover', 'dragleave', 'drop']
+            .forEach(event => {
+                droparea.addEventListener(event, prevents)
+            });
+
+            ['dragenter', 'dragover']
+            .forEach(event => {
+                droparea.addEventListener(event, active)
+            });
+
+           ['dragleave', 'drop']
+           .forEach(event => {
+                droparea.addEventListener(event, inactive)
+            });
+
+
+            droparea.addEventListener('drop', handleDrop)
+
+
+            fileInput.addEventListener('change',  (e) => {
+                const file = fileInput.files[0]
+                
+                // console.log(imageFile)
+                const image = new Image()
+                image.src = URL.createObjectURL(file)
+
+                image.onload = function() {
+                    // console.log("Image upload")
+                    pictureUploaded = true
+                    canvas.style.display = "block"
+                    
+                    var ctx = canvas.getContext('2d')
+                    ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+                }   
+            });
+
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault()
+             
+
+                    // console.log(title.value)
+                    // console.log(content.value)
+                    let formData = new FormData();
+                    formData.append('title', title.value);
+                    formData.append('content', content.value);
+                    formData.append('image', file.files[0]);
+                   
+                    console.log(formData.get('title'))
+                    fetch('/post', {
+                        method: "POST",
+                        body: formData,  
+                    })
+                    .then(response => console.log(response))
+                    .catch(err => console.log(err))
+
+            })
+          
+        }
+
+        document.addEventListener("DOMContentLoaded", initApp);
+   </script>
+   
+</body>
+</html>

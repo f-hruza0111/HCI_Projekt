@@ -3,6 +3,7 @@ const session = require("express-session")
 const bodyParser = require('body-parser')
 const { access } = require("fs")
 const path = require("path")
+const multer = require("multer");
 const axios = require('axios').default
 require('dotenv').config()
 
@@ -39,24 +40,24 @@ app.use(express.static(path.join(__dirname, "views")));
 
 
 //TODO: OVO JE SAM TU STAVLJENO OKVIRNO
+//KAD JE USER ULOGIRAN definiran je req.session.userID, inace undefined
+app.get("/", async function (req, res) {
+    // let posts = {}
+    // await axios.get(restAPIURL + '/posts')
+    // .then(result => {
+    //     console.log(result.data)
+    //    posts = result.data
+       
 
-app.get("/", function (req, res) {
-    let posts = {}
-
-    axios.get(restAPIURL + '/posts')
-    .then(result => {
-        console.log(result.data)
-        posts = result.data
-    })
-    .catch(err => console.log(err))
-
-
-    res.render('index', {posts: posts})
+    // })
+    // .catch(err => console.log(err))
+    console.log(req.session.userID)
+    res.render('index', {userID: req.session.userID ? req.session.userID : null})
 });
 
 app.get("/registration",  function (req, res) {
     // console.log("Rendering Registraion Page")
-    res.render('registration', {err:undefined})
+    res.render('registration', {err:undefined, userID: undefined})
 })
 
 
@@ -74,13 +75,14 @@ app.post("/registration",  async function (req, res) {
         .then(response => {
             console.log("Location: " + response.headers.location)
             console.log("Data: " + response.data)
+           req.session.userID = response.headers.location
             if(response.status != 201){
                 err = response.data
             } 
         })
         .catch(error => {
-            console.log(error.response.data)
-            err = error.response.data
+            console.log(error.response)
+            err = error.response
         })
     }
     
@@ -94,26 +96,93 @@ app.post("/registration",  async function (req, res) {
 })
 
 app.get("/login",  function (req, res) {
-    res.render('login')
+    res.render('login', {err: null, userID: undefined})
 })
 
 //posalji credentials
-//spremi JWT tokene u session
-app.post("/login",  function (req, res) {
-    
+// ak vrati ok napravi sesiju
+app.post("/login",  async function (req, res) {
+    var response
+    var error = null
+    try{
+        response = await axios.post(restAPIURL + "/login",{
+            username: req.body.username,
+            password: req.body.password
+        })
+
+        console.log(response)
+        if(response.status === 200){
+            req.session.userID = response.data
+        } else {
+            error = "Invalid credentials!"
+        }
+
+    } catch(err){
+        console.log(error)
+        error = err
+    }
+
+
+   if(error){
+        res.render('login', {err:error})
+   } else {
+        res.redirect('/')
+   }
+})
+
+app.post('/logout', function(req, res) {
+    req.session.destroy()
+    res.redirect('/')
+})
+
+app.get("/post", authorize, function(req, res) {
+    res.render('postForm', {err: undefined})
 })
 
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images')
+    },
+
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+})
+
+const upload = multer({storage: storage})
 
 
+app.post("/post",  authorize, upload.single('image'), async function(req, res) {
+  
+    console.log(req.file)
+   
+    const formData = new FormData()
+    formData.append('creatorID', req.body.creatorID)
+    formData.append('title', req.body.title)
+    formData.append('content', req.body.content)
+    formData.append('image', req.file)
 
+    var err = null
+    await axios.post(restAPIURL + "/post", formData)
+   .then( response => {
+        if(response.status !== 200){
+           err = "Error while creating post!"
+        }
+   })
+   .catch(error => {
+        // console.log("ERROR")
+        err = error.response.data
+   })
 
-
-
-
-
-
-
+   console.log(err)
+   
+   if(err){
+        res.render('postForm', {err: err})
+   } else {
+        res.redirect('/')
+   }
+})
 
 
 
@@ -129,4 +198,12 @@ if(externalUrl){
     })
 }
 
-
+//middleware
+function authorize(req, res, next){
+    if(req.session.userID === undefined){
+        res.status(403)
+        res.send("Please log in to take this action!")
+    } else {
+        next()
+    }
+}

@@ -1,6 +1,6 @@
 FRONTEND:
 Login,
-Registracija,
+Registracija - DONE,
 Prikaz Objava
 	- search bar
 	- objava
