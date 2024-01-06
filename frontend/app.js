@@ -124,7 +124,7 @@ app.post("/login",  async function (req, res) {
 
 
    if(error){
-        res.render('login', {err:error})
+        res.render('login', {err:error, userID: undefined})
    } else {
         res.redirect('/')
    }
@@ -136,7 +136,7 @@ app.post('/logout', function(req, res) {
 })
 
 app.get("/post", authorize, function(req, res) {
-    res.render('postForm', {err: undefined})
+    res.render('postForm', {err: undefined, userID: req.session.userID})
 })
 
 
