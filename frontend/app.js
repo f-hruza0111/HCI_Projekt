@@ -96,7 +96,7 @@ app.post("/registration",  async function (req, res) {
 })
 
 app.get("/login",  function (req, res) {
-    res.render('login', {err: null, userID: undefined})
+    res.render('login', {err: null, userID: req.session.userID})
 })
 
 //posalji credentials
@@ -124,7 +124,7 @@ app.post("/login",  async function (req, res) {
 
 
    if(error){
-        res.render('login', {err:error})
+        res.render('login', {err:error, userID: undefined})
    } else {
         res.redirect('/')
    }
@@ -136,7 +136,7 @@ app.post('/logout', function(req, res) {
 })
 
 app.get("/post", authorize, function(req, res) {
-    res.render('postForm', {err: undefined})
+    res.render('postForm', {err: undefined, userID: req.session.userID})
 })
 
 
@@ -145,8 +145,35 @@ const storage = multer.diskStorage({
         cb(null, 'images')
     },
 
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname))
+    filename: async (req, file, cb) => {
+        // const formData = new FormData()
+        // formData.append('creatorID', req.body.creatorID)
+        // formData.append('title', req.body.title)
+        // formData.append('content', req.body.content)
+        // // formData.append('image', req.image)
+    
+        var err = null
+        await axios.post(restAPIURL + "/post", {
+            creatorID: req.session.userID,
+            title: req.body.title,
+            content: req.body.content
+        })
+       .then( response => {
+            if(response.status !== 201){
+               err = "Error while creating post!"
+                // res.render('postForm', {err: err, userID: req.session.userID})
+               cb(err)
+            } else {
+                // console.log(response)
+                cb(null, response.headers.location + '_' + req.body.title + /*"_" + Date.now() + */ path.extname(file.originalname))
+            }
+       })
+       .catch(error => {
+            // console.log("ERROR")
+            err = error.response.data
+       })
+
+
     }
 })
 
@@ -155,35 +182,46 @@ const upload = multer({storage: storage})
 
 app.post("/post",  authorize, upload.single('image'), async function(req, res) {
   
-    console.log(req.file)
+    console.log("Uploading image...")
    
-    const formData = new FormData()
-    formData.append('creatorID', req.body.creatorID)
-    formData.append('title', req.body.title)
-    formData.append('content', req.body.content)
-    formData.append('image', req.file)
+//     const formData = new FormData()
+//     formData.append('creatorID', req.body.creatorID)
+//     formData.append('title', req.body.title)
+//     formData.append('content', req.body.content)
+//     // formData.append('image', req.image)
 
-    var err = null
-    await axios.post(restAPIURL + "/post", formData)
-   .then( response => {
-        if(response.status !== 200){
-           err = "Error while creating post!"
-        }
-   })
-   .catch(error => {
-        // console.log("ERROR")
-        err = error.response.data
-   })
+//     var err = null
+//     await axios.post(restAPIURL + "/post", formData)
+//    .then( response => {
+//         if(response.status !== 200){
+//            err = "Error while creating post!"
+//         }
+//    })
+//    .catch(error => {
+//         // console.log("ERROR")
+//         err = error.response.data
+//    })
 
-   console.log(err)
+//    console.log(err)
    
-   if(err){
-        res.render('postForm', {err: err})
-   } else {
+//    if(err){
+//         res.render('postForm', {err: err, userID: req.session.userID})
+//    } else {
         res.redirect('/')
-   }
+//    }
 })
 
+app.get('/search', async function(req, res) {
+    const searchKey = req.query.searchKey
+    console.log('Fetching users with name similar to ' + searchKey)
+    console.log(searchKey)
+    axios.get(restAPIURL + '/users?searchKey='+ searchKey, null)
+    .then(response => {
+        console.log(response.data)
+        res.json(response.data)
+    })
+    .catch(error => console.log(error))
+})
 
 
 if(externalUrl){
@@ -201,8 +239,9 @@ if(externalUrl){
 //middleware
 function authorize(req, res, next){
     if(req.session.userID === undefined){
-        res.status(403)
-        res.send("Please log in to take this action!")
+        console.log('User not logged in')
+        res.redirect('/login')
+        // res.send("Please log in to take this action!")
     } else {
         next()
     }

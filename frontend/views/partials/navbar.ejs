@@ -1,9 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">Home</a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-      
-
         <% if(!userID) {%>
           <li class="nav-item">
             <a class="nav-link" href="/registration">Sign up</a>
@@ -12,6 +10,8 @@
           <li class="nav-item">
             <a class="nav-link" href="/login">Log in</a>
           </li> 
+        
+        
         <%} else {%>
           <li class="nav-item">
               <form action="/logout" method="post">
@@ -19,7 +19,80 @@
               </form>
               
           </li> 
-        <% }%>
+        <% }%>      
       </ul>
+    
     </div>
+
+    <form class="form-inline">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+</nav> -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/">Blog App</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+
+      <% if(!userID) { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/registration">Registration</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+     <% } else { %> 
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+  <form class="form-inline my-2 my-lg-0 w-50">
+    <input class="form-control mr-sm-2" id="search" type="search" name="searchKey" placeholder="Search users" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    <div id="dropdown" class="list-group"></div>
+  </form>
 </nav>
+
+<script>
+  const searchBar = document.getElementById('search')
+  const dropdown = document.getElementById('dropdown')
+  searchBar.addEventListener('keyup', async (e) =>{
+      // console.log('Search bar change')
+      const searchKey = searchBar.value
+      dropdown.replaceChildren()
+
+      if(searchKey !== undefined && searchKey !== ''){
+
+        fetch('/search?' + new URLSearchParams({
+        searchKey: searchKey
+        }))
+        .then(res => {
+            return res.json()
+        })
+        .then(res => {
+            console.log(res)
+            for(var user of res){
+              const linkElement = document.createElement('a')
+              linkElement.href ='/profile/' + user.id
+              linkElement.textContent = user.username
+              dropdown.appendChild(linkElement)
+            }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      }
+      
+  })
+</script>

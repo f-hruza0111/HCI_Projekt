@@ -1,19 +1,15 @@
 package com.example.HCIProject.controller;
 
-import com.example.HCIProject.entity.AppUser;
-import com.example.HCIProject.entity.Post;
 import com.example.HCIProject.records.*;
 import com.example.HCIProject.service.PostsService;
 import com.example.HCIProject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController("/home")
@@ -30,22 +26,22 @@ public class IndexController {
     }
 
     @GetMapping("/posts")
-    List<Post> getAllPosts(){
+    List<PostsResponse> getAllPosts(@RequestParam(required = false) Long userID){
 
-        //todo paging i sortiranje po followerima
+        //todo paging(ovo ako stignemo) i sortiranje po followerima
 
 
-        return postsService.getAllPosts();
+        return postsService.getAllPosts(userID);
     }
 
-    @PostMapping(path = "/post")
-    void createPost( @RequestParam("image") MultipartFile image) throws IOException {
-        System.out.println(image.getName());
-//        postsService.createPost(request, image);
+    @PostMapping("/post")
+    public ResponseEntity<?> createPost(@RequestBody CreatePostRequest request){
+//        System.out.println(image.getName());
+        return ResponseEntity.created(URI.create(String.valueOf(postsService.createPost(request)))).build();
     }
 
     @PutMapping("/post")
-    void editPost(@RequestParam Long postID, @RequestBody CreatePostRequest postRequest, @RequestPart MultipartFile image){
+    public void editPost(@RequestParam Long postID, @RequestBody CreatePostRequest postRequest){
         postsService.editPost(postRequest, postID);
     }
 
@@ -55,42 +51,46 @@ public class IndexController {
      * @return
      */
     @PostMapping("/registration")
-    ResponseEntity<?> registerUser(@RequestBody RegistrationRequest request){
+    public ResponseEntity<?> registerUser(@RequestBody RegistrationRequest request){
         return ResponseEntity.created(URI.create(String.valueOf(userService.registerUser(request)))).build();
     }
 
     @PostMapping("/comment")
-    void postComment(PostCommentRequest request){
+    public void postComment(PostCommentRequest request){
         postsService.addComment(request);
     }
     @PutMapping("/comment")
-    void editComment(@RequestParam Long commentID, PostCommentRequest request){
+    public void editComment(@RequestParam Long commentID, PostCommentRequest request){
         postsService.editComment(request, commentID);
     }
 
     @PostMapping("/post/like")
-    void likePost(LikeRequest request){
+    public void likePost(LikeRequest request){
         postsService.likePost(request);
     }
 
     @PostMapping("/comment/like")
-    void likeComment(LikeRequest request){
+    public void likeComment(LikeRequest request){
         postsService.likeComment(request);
     }
 
     @PostMapping("/follow")
-    void followCreator(Long creatorID, Long userID){
+    public void followCreator(Long creatorID, Long userID){
         userService.follow(creatorID, userID);
     }
 
 
     @GetMapping("/profile/{id}")
-    ResponseEntity<ProfileResponse> getProfile(@PathVariable Long id){
+    public ResponseEntity<ProfileResponse> getProfile(@PathVariable Long id){
         return ResponseEntity.ok(userService.getProfile(id));
     }
 
     @GetMapping("/users")
-    List<AppUser> getAllUsers(){
-        return userService.getAllUsers();
+    public List<UserResponse> getAllUsers(@RequestParam(defaultValue = "") String searchKey){
+        if(searchKey.equals("")){
+            return new ArrayList<>();
+        } else {
+            return userService.findUsersByUsername(searchKey);
+        }
     }
 }

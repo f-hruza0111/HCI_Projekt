@@ -5,6 +5,7 @@ import com.example.HCIProject.entity.AppUser;
 import com.example.HCIProject.records.LoginRequest;
 import com.example.HCIProject.records.ProfileResponse;
 import com.example.HCIProject.records.RegistrationRequest;
+import com.example.HCIProject.records.UserResponse;
 import com.example.HCIProject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +61,19 @@ public class UserService {
         return -1L;
     }
 
-    public List<AppUser> getAllUsers(){
-        return userRepository.findAll();
+    public List<UserResponse> getAllUsers(){
+        List<AppUser> users = userRepository.findAll();
+
+       return users.stream()
+               .map(user -> new UserResponse(user.getId(), user.getUsername()))
+               .collect(Collectors.toList());
+    }
+
+    public List<UserResponse> findUsersByUsername(String searchKey) {
+        List<AppUser> users = userRepository.findByUsernameContainingIgnoreCase(searchKey);
+
+        return users.stream()
+                .map(user -> new UserResponse(user.getId(), user.getUsername()))
+                .collect(Collectors.toList());
     }
 }

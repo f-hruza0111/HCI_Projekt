@@ -6,15 +6,19 @@ import com.example.HCIProject.entity.Post;
 import com.example.HCIProject.records.CreatePostRequest;
 import com.example.HCIProject.records.LikeRequest;
 import com.example.HCIProject.records.PostCommentRequest;
+import com.example.HCIProject.records.PostsResponse;
 import com.example.HCIProject.repository.BlogCommentRepository;
 import com.example.HCIProject.repository.PostRepository;
 import com.example.HCIProject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,30 +27,83 @@ public class PostsService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final BlogCommentRepository commentRepository;
-    public List<Post> getAllPosts(){
-        return postRepository.findAll();
+
+
+    public List<PostsResponse> getAllPosts(Long userID){
+
+
+        List<PostsResponse> response = new ArrayList<>();
+        List<Post> posts = postRepository.findAll();
+
+        if(userID != null){
+            AppUser user = userRepository.findById(userID).orElseThrow(() -> new IllegalStateException("User with id " + userID + " not found"));
+
+            List<Post> followedCreatorPosts = new java.util.ArrayList<>(posts.stream()
+                    .filter((post) -> user.getFollowing().contains(post.getCreator()))
+                    .toList());
+
+            posts.removeAll(followedCreatorPosts);
+
+            followedCreatorPosts.sort(Collections.reverseOrder());
+
+            for(Post p : followedCreatorPosts){
+                response.add(
+                        new PostsResponse(
+                                p.getId(),
+                                p.getTitle(),
+                                p.getContent(),
+                                (long) p.getLikes().size(),
+                                p.getCreatedOn().toString(),
+                                p.getLastEdited().toString(),
+                                p.getCreator().getUsername(),
+                                p.getCreator().getId()
+                        )
+                );
+            }
+
+        }
+
+        posts.sort(Collections.reverseOrder());
+
+        for(Post p : posts){
+            response.add(
+                    new PostsResponse(
+                            p.getId(),
+                            p.getTitle(),
+                            p.getContent(),
+                            (long) p.getLikes().size(),
+                            p.getCreatedOn().toString(),
+                            p.getLastEdited().toString(),
+                            p.getCreator().getUsername(),
+                            p.getCreator().getId()
+                    )
+            );
+        }
+
+        return response;
     }
 
-    public void createPost(CreatePostRequest request, MultipartFile image) {
+    public Long createPost(CreatePostRequest request) {
         AppUser creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
 
 
 
 
-//        Post post = Post.builder()
-//                .creator(creator)
-//                .blogPost(request.content())
-////                .images(request.images())
-//                .createdOn(LocalDate.now())
-//                .build();
-//
-//        postRepository.save(post);
+        Post post = Post.builder()
+                .creator(creator)
+                .title(request.title())
+                .content(request.content())
+//                .images(request.images())
+                .createdOn(LocalDate.now())
+                .build();
+
+        return postRepository.save(post).getId();
     }
 
     public void editPost(CreatePostRequest request, Long postID){
         Post post = postRepository.findById(postID).orElseThrow(() -> new IllegalStateException("Post not found"));
 
-        post.setBlogPost(request.content());
+        post.setContent(request.content());
 //        post.setImages(request.images());
         post.setLastEdited(LocalDate.now());
 

@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,16 +15,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Post {
+public class Post implements Comparable{
 
     @Id
     @GeneratedValue
     private Long id;
 
     @Column(length = 5000)
-    private String blogPost;
+    private String content;
+    private String title;
 
-    private File image;
+//    private File image;
 
     @ManyToOne
     private AppUser creator;
@@ -39,12 +39,20 @@ public class Post {
     private LocalDate createdOn;
     private LocalDate lastEdited;
 
-    public Post(String blogPost, List<Byte[]> images, AppUser creator, LocalDate createdOn, LocalDate lastEdited) {
-        this.blogPost = blogPost;
+    public Post(String title, String content, /*List<Byte[]> images,*/ AppUser creator, LocalDate createdOn, LocalDate lastEdited) {
+        this.content = content;
 //        this.images = images;
         this.creator = creator;
         this.comments = new ArrayList<>();
         this.likes = new ArrayList<>();
         this.createdOn = createdOn;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(!this.getClass().equals(o.getClass())) return -1;
+
+        Post other = (Post) o;
+        return this.createdOn.compareTo(other.createdOn);
     }
 }
