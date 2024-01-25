@@ -40,10 +40,16 @@ public class IndexController {
         return ResponseEntity.created(URI.create(String.valueOf(postsService.createPost(request)))).build();
     }
 
-    @PutMapping("/post")
-    public void editPost(@RequestParam Long postID, @RequestBody CreatePostRequest postRequest){
+    @PutMapping("/post/{postID}")
+    public void editPost(@PathVariable Long postID, @RequestBody CreatePostRequest postRequest){
         postsService.editPost(postRequest, postID);
     }
+
+    @DeleteMapping("/post/{postID}")
+        public void deletePost(@PathVariable Long postID){
+            postsService.deletePost(postID);
+        }
+
 
     /**
      * Radi i daje error za duplikate
@@ -62,6 +68,11 @@ public class IndexController {
     @PutMapping("/comment")
     public void editComment(@RequestParam Long commentID, PostCommentRequest request){
         postsService.editComment(request, commentID);
+    }
+
+    @DeleteMapping("/comment")
+    public void deleteComment(@RequestBody DeleteCommentRequest request){
+        postsService.deleteComment(request);
     }
 
     @PostMapping("/post/like")
