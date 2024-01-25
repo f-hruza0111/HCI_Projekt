@@ -2,6 +2,8 @@ package com.example.HCIProject.records;
 
 import com.example.HCIProject.entity.AppUser;
 
+import java.util.List;
+
 
 public record PostsResponse(
         Long id,
@@ -12,7 +14,9 @@ public record PostsResponse(
         String editedOn,
 
         String creatorUsername,
-        Long creatorID
+        Long creatorID,
+
+        List<CommentResponse> comments
 )  {
 
 

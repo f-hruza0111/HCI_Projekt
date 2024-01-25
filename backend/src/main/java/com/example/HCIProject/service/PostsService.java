@@ -3,10 +3,7 @@ package com.example.HCIProject.service;
 import com.example.HCIProject.entity.AppUser;
 import com.example.HCIProject.entity.BlogComment;
 import com.example.HCIProject.entity.Post;
-import com.example.HCIProject.records.CreatePostRequest;
-import com.example.HCIProject.records.LikeRequest;
-import com.example.HCIProject.records.PostCommentRequest;
-import com.example.HCIProject.records.PostsResponse;
+import com.example.HCIProject.records.*;
 import com.example.HCIProject.repository.BlogCommentRepository;
 import com.example.HCIProject.repository.PostRepository;
 import com.example.HCIProject.repository.UserRepository;
@@ -14,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -56,7 +54,17 @@ public class PostsService {
                                 p.getCreatedOn().toString(),
                                 p.getLastEdited() == null ? "" : p.getLastEdited().toString(),
                                 p.getCreator().getUsername(),
-                                p.getCreator().getId()
+                                p.getCreator().getId(),
+                                p.getComments().stream()
+                                        .map(comment -> new CommentResponse(
+                                                comment.getId(),
+                                                comment.getContent(),
+                                                comment.getLikes().size(),
+                                                new UserResponse(comment.getCreator().getId(), comment.getCreator().getUsername()),
+                                                comment.getCreatedOn().toString(),
+                                                comment.getLastEdited() == null ? "" : comment.getLastEdited().toString()
+                                        ))
+                                        .toList()
                         )
                 );
             }
@@ -75,7 +83,17 @@ public class PostsService {
                             p.getCreatedOn().toString(),
                             p.getLastEdited() == null ? "" : p.getLastEdited().toString(),
                             p.getCreator().getUsername(),
-                            p.getCreator().getId()
+                            p.getCreator().getId(),
+                            p.getComments().stream()
+                                    .map(comment -> new CommentResponse(
+                                            comment.getId(),
+                                            comment.getContent(),
+                                            comment.getLikes().size(),
+                                            new UserResponse(comment.getCreator().getId(), comment.getCreator().getUsername()),
+                                            comment.getCreatedOn().toString(),
+                                            comment.getLastEdited() == null ? "" : comment.getLastEdited().toString()
+                                    ))
+                                    .toList()
                     )
             );
         }
@@ -103,6 +121,7 @@ public class PostsService {
     public void editPost(CreatePostRequest request, Long postID){
         Post post = postRepository.findById(postID).orElseThrow(() -> new IllegalStateException("Post not found"));
 
+        post.setTitle(request.title());
         post.setContent(request.content());
 //        post.setImages(request.images());
         post.setLastEdited(LocalDate.now());
@@ -122,7 +141,7 @@ public class PostsService {
 
         post.getComments().add(comment);
 
-        commentRepository.save(comment);
+
         postRepository.save(post);
     }
 
@@ -157,10 +176,34 @@ public class PostsService {
 
     public void likeComment(LikeRequest request) {
         AppUser liked = userRepository.findById(request.userID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
-        BlogComment comment = commentRepository.findById(request.contentID()).orElseThrow(() -> new IllegalStateException("Post not found"));
+        BlogComment comment = commentRepository.findById(request.contentID()).orElseThrow(() -> new IllegalStateException("Comment not found"));
 
-        comment.getLikes().add(liked);
+        List<AppUser> likes = comment.getLikes();
+        if(likes.contains(liked)) {
+            likes.remove(liked);
+        } else {
+            likes.add(liked);
+        }
 
         commentRepository.save(comment);
+    }
+
+    public void deletePost(Long postID) {
+
+        Post post = postRepository.findById(postID).orElseThrow(() -> new IllegalStateException("Post not found"));
+        post.getCreator().getPosts().remove(post);
+
+        postRepository.delete(post);
+        userRepository.save(post.getCreator());
+
+    }
+
+    public void deleteComment(DeleteCommentRequest request) {
+        BlogComment comment = commentRepository.findById(request.commentID()).orElseThrow(() -> new IllegalStateException("Comment not found"));
+        Post post = postRepository.findById(request.postID()).orElseThrow(() -> new IllegalStateException("Post not found"));
+
+        post.getComments().remove(comment);
+        postRepository.save(post);
+
     }
 }

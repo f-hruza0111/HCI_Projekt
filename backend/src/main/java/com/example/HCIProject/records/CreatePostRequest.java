@@ -6,6 +6,8 @@ import java.util.List;
 
 public record CreatePostRequest (
         Long creatorID,
+
+        Long postID,
         String content,
         String title
 
