@@ -54,7 +54,7 @@ public class PostsService {
                                 p.getContent(),
                                 (long) p.getLikes().size(),
                                 p.getCreatedOn().toString(),
-                                p.getLastEdited().toString(),
+                                p.getLastEdited() == null ? "" : p.getLastEdited().toString(),
                                 p.getCreator().getUsername(),
                                 p.getCreator().getId()
                         )
@@ -73,7 +73,7 @@ public class PostsService {
                             p.getContent(),
                             (long) p.getLikes().size(),
                             p.getCreatedOn().toString(),
-                            p.getLastEdited().toString(),
+                            p.getLastEdited() == null ? "" : p.getLastEdited().toString(),
                             p.getCreator().getUsername(),
                             p.getCreator().getId()
                     )
