@@ -9,6 +9,7 @@ public record CreatePostRequest (
 
         Long postID,
         String content,
-        String title
+        String title,
+        String pictureFormat
 
 ){}

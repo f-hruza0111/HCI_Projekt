@@ -51,7 +51,12 @@ app.get("/", async function (req, res) {
 	})
     .catch(err => console.log(err))
 	
-    res.render('index', {userID: req.session.userID ? req.session.userID : null, posts: posts})
+    res.render('index', 
+        {
+            err: undefined, 
+            userID: req.session.userID ? req.session.userID : null, 
+            posts: posts
+    })
 });
 
 app.get("/registration",  function (req, res) {
@@ -109,7 +114,7 @@ app.post("/login",  async function (req, res) {
             password: req.body.password
         })
 
-        console.log(response)
+        // console.log(response)
         if(response.status === 200){
             req.session.userID = response.data
         } else {
@@ -118,7 +123,8 @@ app.post("/login",  async function (req, res) {
 
     } catch(err){
         console.log(error)
-        error = err
+        if(error.status === 403)
+        error = "Invalid credentials, please try again"
     }
 
 
@@ -145,17 +151,14 @@ const storage = multer.diskStorage({
     },
 
     filename: async (req, file, cb) => {
-        // const formData = new FormData()
-        // formData.append('creatorID', req.body.creatorID)
-        // formData.append('title', req.body.title)
-        // formData.append('content', req.body.content)
-        // // formData.append('image', req.image)
-    
+        // console.log("Inside multer filename method")
+      
         var err = null
         await axios.post(restAPIURL + "/post", {
             creatorID: req.session.userID,
             title: req.body.title,
-            content: req.body.content
+            content: req.body.content,
+            pictureFormat: path.extname(file.originalname)
         })
        .then( response => {
             if(response.status !== 201){
@@ -180,8 +183,23 @@ const upload = multer({storage: storage})
 
 app.post("/post",  authorize, upload.single('image'), async function(req, res) {
   
-    console.log("Uploading image...")
-   
+    console.log("Creating post...")
+    // console.log(req.file)
+
+
+    let err = undefined
+    if(req.file == undefined){
+        await axios.post(restAPIURL + "/post", {
+            creatorID: req.session.userID,
+            title: req.body.title,
+            content: req.body.content,
+        })
+       .catch(error => {
+            // console.log("ERROR")
+            err = error.response.data
+       })
+    }
+
     // const formData = new FormData()
     // formData.append('creatorID', req.body.creatorID)
     // formData.append('title', req.body.title)
@@ -202,11 +220,11 @@ app.post("/post",  authorize, upload.single('image'), async function(req, res) {
 
    // console.log(err)
    
-   // if(err){
-        // res.render('postForm', {err: err, userID: req.session.userID})
-   // } else {
+    if(err){
+        res.render('postForm', {err: err, userID: req.session.userID})
+    } else {
         res.redirect('/')
-   // }
+    }
 })
 
 app.get('/search', async function(req, res) {
@@ -219,6 +237,25 @@ app.get('/search', async function(req, res) {
         res.json(response.data)
     })
     .catch(error => console.log(error))
+})
+
+app.get('/profile/:id', async function(req, res) {
+    let err = undefined
+    const id = req.params.id
+    let profile = {}
+
+    try{
+        const response = await axios.get(restAPIURL + '/profile/' + id)
+        console.log(response)
+        profile = response.data
+    } catch(error){
+        err = "Something went wrong when getting profile"
+        console.log(error)
+    }
+
+    //TODO dovrsit
+    // res.render('profile', {})
+    res.send("OK")
 })
 
 

@@ -16,6 +16,8 @@ public record PostsResponse(
         String creatorUsername,
         Long creatorID,
 
+        String picture,
+
         List<CommentResponse> comments
 )  {
 

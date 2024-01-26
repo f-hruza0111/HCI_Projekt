@@ -12,7 +12,7 @@ public record ProfileResponse(
        Long id,
 
        String username,
-       List<Post> posts
+       List<PostsResponse> posts
 
 ) {
 }

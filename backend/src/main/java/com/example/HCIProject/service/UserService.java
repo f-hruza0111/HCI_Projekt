@@ -2,10 +2,7 @@ package com.example.HCIProject.service;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.example.HCIProject.entity.AppUser;
-import com.example.HCIProject.records.LoginRequest;
-import com.example.HCIProject.records.ProfileResponse;
-import com.example.HCIProject.records.RegistrationRequest;
-import com.example.HCIProject.records.UserResponse;
+import com.example.HCIProject.records.*;
 import com.example.HCIProject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +41,28 @@ public class UserService {
         return new ProfileResponse(
                 user.getId(),
                 user.getUsername(),
-                user.getPosts()
+                user.getPosts().stream()
+                        .map(p ->  new PostsResponse(
+                                p.getId(),
+                                p.getTitle(),
+                                p.getContent(),
+                                (long) p.getLikes().size(),
+                                p.getCreatedOn().toString(),
+                                p.getLastEdited() == null ? "" : p.getLastEdited().toString(),
+                                p.getCreator().getUsername(),
+                                p.getCreator().getId(),
+                                p.getPictureFileName(),
+                                p.getComments().stream()
+                                        .map(comment -> new CommentResponse(
+                                                comment.getId(),
+                                                comment.getContent(),
+                                                comment.getLikes().size(),
+                                                new UserResponse(comment.getCreator().getId(), comment.getCreator().getUsername()),
+                                                comment.getCreatedOn().toString(),
+                                                comment.getLastEdited() == null ? "" : comment.getLastEdited().toString()
+                                        ))
+                                        .toList()
+                        )).collect(Collectors.toList())
         );
     }
 

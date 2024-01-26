@@ -38,14 +38,16 @@ public class Post implements Comparable{
 
     private LocalDate createdOn;
     private LocalDate lastEdited;
+    private String pictureFileName;
 
-    public Post(String title, String content, /*List<Byte[]> images,*/ AppUser creator, LocalDate createdOn, LocalDate lastEdited) {
+    public Post(String title, String content, /*List<Byte[]> images,*/ AppUser creator, LocalDate createdOn, LocalDate lastEdited, String pictureExtension) {
         this.content = content;
 //        this.images = images;
         this.creator = creator;
         this.comments = new ArrayList<>();
         this.likes = new ArrayList<>();
         this.createdOn = createdOn;
+        this.pictureFileName = pictureExtension;
     }
 
     @Override

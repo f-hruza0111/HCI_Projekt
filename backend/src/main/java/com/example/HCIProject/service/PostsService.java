@@ -55,6 +55,7 @@ public class PostsService {
                                 p.getLastEdited() == null ? "" : p.getLastEdited().toString(),
                                 p.getCreator().getUsername(),
                                 p.getCreator().getId(),
+                                p.getPictureFileName(),
                                 p.getComments().stream()
                                         .map(comment -> new CommentResponse(
                                                 comment.getId(),
@@ -84,6 +85,7 @@ public class PostsService {
                             p.getLastEdited() == null ? "" : p.getLastEdited().toString(),
                             p.getCreator().getUsername(),
                             p.getCreator().getId(),
+                            p.getPictureFileName(),
                             p.getComments().stream()
                                     .map(comment -> new CommentResponse(
                                             comment.getId(),
@@ -115,7 +117,10 @@ public class PostsService {
                 .createdOn(LocalDate.now())
                 .build();
 
-        return postRepository.save(post).getId();
+         Long id = postRepository.save(post).getId();
+         post.setPictureFileName(id + "_" + post.getTitle() + request.pictureFormat());
+         postRepository.save(post);
+        return id;
     }
 
     public void editPost(CreatePostRequest request, Long postID){
