@@ -151,13 +151,13 @@ const storage = multer.diskStorage({
 
     filename: async (req, file, cb) => {
         // console.log("Inside multer filename method")
-		console.log(file)
+		
         var err = null
         await axios.post(restAPIURL + "/post", {
             creatorID: req.session.userID,
             title: req.body.title,
             content: req.body.content,
-            pictureFormat: file == null ? "" : path.extname(file.originalname)
+            pictureFormat: file == undefined ? "" : path.extname(file.originalname)
         })
        .then( response => {
             if(response.status !== 201){
@@ -166,7 +166,7 @@ const storage = multer.diskStorage({
                cb(err)
             } else {
                 // console.log(response)
-                cb(null, response.headers.location + '_' + req.body.title + /*"_" + Date.now() + */ path.extname(file.originalname))
+                cb(null, response.headers.location + '_' + req.body.title + /*"_" + Date.now() + */ file == undefined ? "" : path.extname(file.originalname))
             }
        })
        .catch(error => {
