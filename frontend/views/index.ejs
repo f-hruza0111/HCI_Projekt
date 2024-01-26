@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="css/style.css" rel="stylesheet" />
     <title>Blog App</title>
     <%- include('./partials/bootstrap') %>
 </head>
@@ -14,19 +15,21 @@
         </div>
     <% } %>
 
-    <h1>Home page</h1>
+	<div class="bodyContentContainer">
+		<h1>Home page</h1>
 
-    <a href="/post" class ="btn btn-primary">New post</a>
+		<a href="/post" class ="btn btn-primary">New post</a>
 	
-	<%for (let post of posts) {%>
+		<%for (let post of posts) {%>
 	
-	<div>
-		<h3><%=post.title%></h3>
-		<p><%=post.content%></p>
-		<image src="<%=post.picture%>"></image>
-	</div>
+		<div class="post">
+			<h3><%=post.title%></h3>
+			<p><%=post.content%></p>
+			<image src="<%=post.picture%>"></image>
+		</div>
 		
-	<%}%>
+		<%}%>
+	</div>
    
 </body>
 </html>

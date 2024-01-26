@@ -46,7 +46,6 @@ app.get("/", async function (req, res) {
     let posts = {}
     await axios.get(restAPIURL + '/posts', { params: { userID: req.session.userID } })
 		.then(result => {
-			console.log(result.data)
 			posts = result.data
 	})
     .catch(err => console.log(err))
@@ -152,13 +151,13 @@ const storage = multer.diskStorage({
 
     filename: async (req, file, cb) => {
         // console.log("Inside multer filename method")
-      
+		console.log(file)
         var err = null
         await axios.post(restAPIURL + "/post", {
             creatorID: req.session.userID,
             title: req.body.title,
             content: req.body.content,
-            pictureFormat: path.extname(file.originalname)
+            pictureFormat: file == null ? "" : path.extname(file.originalname)
         })
        .then( response => {
             if(response.status !== 201){
