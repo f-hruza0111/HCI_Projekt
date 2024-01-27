@@ -49,7 +49,7 @@ app.get("/", async function (req, res) {
 			posts = result.data
 	})
     .catch(err => console.log(err))
-	
+	console.log(posts)
     res.render('index', 
         {
             err: undefined, 
@@ -255,6 +255,21 @@ app.get('/profile/:id', async function(req, res) {
     //TODO dovrsit
     // res.render('profile', {})
     res.send("OK")
+})
+
+
+app.get("/like/:postID",  async function (req, res) {
+	
+	await axios.post(restAPIURL + "/like", {
+            userID: req.session.userID,
+            contentID: req.params.postID
+        })
+       .catch(error => {
+            // console.log("ERROR")
+            err = error.response.data
+       })
+	
+	res.redirect('back')
 })
 
 

@@ -14,20 +14,36 @@
             <%=err%>
         </div>
     <% } %>
-
-	<div class="bodyContentContainer">
-		<h1>Home page</h1>
-
-		<a href="/post" class ="btn btn-primary">New post</a>
 	
-		<%for (let post of posts) {%>
+	<div style="height: 1vh"></div>
 	
-		<div class="post">
-			<h3><%=post.title%></h3>
-			<p><%=post.content%></p>
-			<image src="<%=post.picture%>"></image>
-		</div>
+	<div class="container mt-5 pt-2">
+	<div class="row m-1">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4 d-flex justify-content-center align-items-center"><h1>Home page</h1></div>
+		<%if (userID) {%>
+		<div class="col-lg-4 d-flex justify-content-end align-items-center"><a href="/post" class ="btn btn-primary">New post</a></div>
+		<%}%>
+	</div>
+	</div>
 		
+	<div class="d-flex flex-column justify-content-center align-items-center">
+		<%for (let post of posts) {%>
+		<div class="post">
+			<p class="text-start">Posted by: <a class="fw-bold" href="/profile/<%=post.creatorID%>"><%=post.creatorUsername%></a></p>
+			<hr>
+			<h3 class="my-2 text-start fw-bold"><%=post.title%></h3>
+			<p class="text-start mt-4"><%=post.content%></p>
+			<%if (post.picture && post.picture.length != 0) {%>
+			<image class="border rounded-2 mb-3" src="<%=post.picture%>"></image>
+			<%}%>
+			
+			<%if (userID) {%>
+			<div class="text-start mb-3">
+				<a class="btn btn-primary" href="/like/<%=post.id%>">Like</a>
+			</div>
+			<%}%>
+		</div>
 		<%}%>
 	</div>
    

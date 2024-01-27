@@ -7,7 +7,6 @@
     <%- include('./partials/bootstrap') %>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-
    <link rel="stylesheet" href="css/style.css"> 
 </head>
 <body>
@@ -18,9 +17,15 @@
             <%=err%>
         </div>
     <% } %>
-    <form class="col-lg-6 offset-lg-3 " id="form">
-
-        <div class="container mt-5">
+	
+	<div style="height: 3vh"></div>
+	
+	<div class="container d-flex flex-column justify-content-center mt-5 mb-4 pt-2 text-center">
+	<h2>Create new post</h2>
+	
+    <form class="col-lg-6 offset-lg-3 p-3 border border-2 rounded-2" id="form">
+	
+        <div class="container mt-3">
             <label for="file-input" id="input-container">
                 <input type="file" accept="image/*"  id="file-input" hidden>
                 <div  class="droparea mb-4">
@@ -28,28 +33,28 @@
                     <p class="mb-2">Drag and drop an image here or click to select one</p>
                 </div>
                 <canvas id="canvas"></canvas>
-            </label>         
+            </label>
         </div>
 
-        <div class="form-group">
+        <div class="form-group mt-2">
             <label for="title">Title</label>
             <input type="text" id="title" name="title" class="form-control">        
         </div>
         
-        <div class="form-group">
+        <div class="form-group mt-2">
             <label for="textarea">
                 Whats on your mind?
               </label>
             
             <textarea class="form-control" id="textarea" rows="6"></textarea>
         </div>
-        </div>
 
-        <div class="form-group">
+        <div class="form-group mt-3">
+			<a class="btn btn-secondary" href="/">Cancel</a>
             <button type="submit" class="btn btn-primary">Create post</button>
         </div>
     </form>
-
+	</div>
 
 
    <script>

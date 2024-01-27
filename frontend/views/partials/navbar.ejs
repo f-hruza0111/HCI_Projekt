@@ -30,7 +30,7 @@
     </form>
 </nav> -->
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 fixed-top">
   <a class="navbar-brand" href="/">Blog App</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -51,16 +51,23 @@
           <a class="nav-link" href="/login">Login</a>
         </li>
      <% } else { %> 
+	 
+	  <li class="nav-item">
+        <a class="nav-link" href="/profile/<%=userID%>">My profile</a>
+      </li>
+	 
       <li class="nav-item">
         <a class="nav-link" href="/logout">Logout</a>
       </li>
       <% } %>
     </ul>
   </div>
-  <form class="form-inline my-2 my-lg-0 w-50">
-    <input class="form-control mr-sm-2" id="search" type="search" name="searchKey" placeholder="Search users" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    <div id="dropdown" class="dropdown"></div>
+  <form class="form-inline my-lg-0 mx-3">
+    <div class="input-group">
+		<input class="form-control mr-sm-2" id="search" type="search" name="searchKey" placeholder="Search users" aria-label="Search" autocomplete="off">
+		<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+	</div>
+	<div id="dropdown" class="dropdown-menu"></div>
   </form>
 </nav>
 
@@ -84,15 +91,28 @@
             console.log(res)
             for(var user of res){
               const linkElement = document.createElement('a')
+			  linkElement.classList.add('dropdown-item')
               linkElement.href ='/profile/' + user.id
               linkElement.textContent = user.username
               dropdown.appendChild(linkElement)
             }
+			if (res.length == 0)
+				dropdown.classList.remove('show')
+			else
+				dropdown.classList.add('show')
         })
         .catch(err => {
           console.log(err)
         })
       }
+	  else
+		dropdown.classList.remove('show')
       
   })
+  
+  window.onclick = function(e){
+   if (!e.target.matches('.dropdown-menu')){
+       dropdown.classList.remove('show')
+   }
+  }
 </script>
