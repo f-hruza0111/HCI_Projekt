@@ -7,7 +7,7 @@
     <title>Blog App</title>
     <%- include('./partials/bootstrap') %>
 </head>
-<body>
+<body class="bg-light">
     <%- include('./partials/navbar') %>
     <% if(err) { %>
         <div class="alert alert-danger" role="alert">
@@ -29,26 +29,51 @@
 		
 	<div class="d-flex flex-column justify-content-center align-items-center">
 		<%for (let post of posts) {%>
-		<div class="post">
-			<p class="text-start">Posted by: <a class="fw-bold" href="/profile/<%=post.creatorID%>"><%=post.creatorUsername%></a></p>
-			<hr>
-			<h3 class="my-2 text-start fw-bold"><%=post.title%>, Created on: <%=post.createdOn%>
-				<%if (post.editedOn != ''){%>
-					Last modified: <%=post.editedOn%>
-				<%}%>
-			</h3>
+		<div id="<%=post.id%>" class="post">
+			<div class="d-flex justify-content-between">
+				<p class="m-0 text-grey">Posted by: <a class="fw-bold" href="/profile/<%=post.creatorID%>"><%=post.creatorUsername%></a></p>
+				<p class="m-0 text-grey">Created on: <%=post.createdOn%>
+					<%if (post.editedOn != ''){%>
+						, Last modified: <%=post.editedOn%>
+					<%}%>
+				</p>
+			</div>
+			<hr class="m-0 mt-1">
+			
+			<h3 class="my-3 text-start fw-bold"><%=post.title%></h3>
 			
 			<p class="text-start mt-4"><%=post.content%></p>
 			<%if (post.picture && post.picture.length != 0) {%>
 			<image class="border rounded-2 mb-3" src="<%=post.picture%>"></image>
 			<%}%>
 			
-			<%if (userID) {%>
+			
 			<div class="text-start mb-3">
-				<a class="btn btn-primary" href="/like/<%=post.id%>">Like</a>
+				<a class="btn
+					<%if (post.userLiked) {%>
+						btn-primary" href="/like/<%=post.id%>">Liked (<%=post.likes%>)
+					<%}
+					else {%>
+						btn-secondary" href="/like/<%=post.id%>">Like (<%=post.likes%>)
+					<%}%>
+				</a>
 			</div>
-			<%}%>
-			<p>Likes: <%=post.likes%></p>
+			
+			<div class="d-flex mb-3 align-items-center">
+				<a class="text-small text-grey" data-bs-toggle="collapse" href="#Comments" role="button" aria-expanded="false" aria-controls="collapseComments">
+					Toggle comments (<%=post.comments.length%>)
+				</a>&nbsp
+				<hr class="m-0 my-1 flex-fill">
+			</div>
+			<div class="collapse" id="Comments">
+				
+				<form method="post" action="/comment">
+					<label for="commentText">Comment:</label>
+					<input type="text" name="commentText" class="form-control">
+					<input type="hidden" name="postID" value="<%=post.id%>">
+					<button type="submit" class="btn btn-primary">Send</button>
+				</form>
+			</div>
 		</div>
 		<%}%>
 	</div>
