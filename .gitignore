@@ -5,6 +5,8 @@ target/
 !**/src/test/**/target/
 node_modules
 
+.docx
+.doc
 ### STS ###
 .apt_generated
 .classpath
