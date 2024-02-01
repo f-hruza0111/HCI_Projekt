@@ -62,7 +62,7 @@ public class IndexController {
     }
 
     @PostMapping("/comment")
-    public void postComment(PostCommentRequest request){
+    public void postComment(@RequestBody  PostCommentRequest request){
         postsService.addComment(request);
     }
     @PutMapping("/comment")

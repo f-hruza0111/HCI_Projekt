@@ -51,10 +51,10 @@
 			<div class="text-start mb-3">
 				<a class="btn
 					<%if (post.userLiked) {%>
-						btn-primary" href="/like/<%=post.id%>">Liked (<%=post.likes%>)
+						btn-primary" href="/like/<%=post.id%>">Liked (<%=post.likes%>)<i class="fa-solid fa-arrow-down"></i>
 					<%}
 					else {%>
-						btn-secondary" href="/like/<%=post.id%>">Like (<%=post.likes%>)
+						btn-secondary" href="/like/<%=post.id%>">Like (<%=post.likes%>)<i class="fa-solid fa-arrow-up"></i>
 					<%}%>
 				</a>
 			</div>
