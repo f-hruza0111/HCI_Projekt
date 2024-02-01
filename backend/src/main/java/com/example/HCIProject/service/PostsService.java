@@ -153,7 +153,7 @@ public class PostsService {
 
         post.getComments().add(comment);
 
-
+        commentRepository.save(comment);
         postRepository.save(post);
     }
 
