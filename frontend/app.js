@@ -226,6 +226,21 @@ app.post("/post",  authorize, upload.single('image'), async function(req, res) {
     }
 })
 
+app.post("/comment",  authorize, async function(req, res) {
+	
+	await axios.post(restAPIURL + "/comment", {
+            creatorID: req.session.userID,
+            postID: req.body.postID,
+			comment: req.body.commentText
+        })
+       .catch(error => {
+            err = error.response.data
+			console.log(err)
+       })
+	
+	res.redirect(req.headers.referer + '#' + req.params.postID)
+})
+
 app.get('/search', async function(req, res) {
     const searchKey = req.query.searchKey
     console.log('Fetching users with name similar to ' + searchKey)
@@ -258,7 +273,7 @@ app.get('/profile/:id', async function(req, res) {
 })
 
 
-app.get("/like/:postID",  async function (req, res) {
+app.get("/like/:postID", authorize, async function (req, res) {
 	
     console.log('User ' + req.session.userID + ' liking post ' + req.params.postID)
 	await axios.post(restAPIURL + "/like", {
@@ -270,7 +285,7 @@ app.get("/like/:postID",  async function (req, res) {
             err = error.response.data
        })
 	
-	res.redirect('back')
+	res.redirect(req.headers.referer + '#' + req.params.postID)
 })
 
 

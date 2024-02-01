@@ -6,8 +6,20 @@
 		margin: 1rem;
 		width: 40%;
 		height: 30%;
-		background-color: whitesmoke;
+		background-color: white;
     }
+	
+.bg-lightblue {
+	background-color: lightskyblue !important;
+}
+
+.text-small {
+	font-size: small;
+}
+
+.text-grey {
+	color: grey;
+}
 	
 img {
 		max-width: 100%;
