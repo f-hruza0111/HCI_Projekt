@@ -86,8 +86,8 @@ public class IndexController {
     }
 
     @PostMapping("/follow")
-    public void followCreator(Long creatorID, Long userID){
-        userService.follow(creatorID, userID);
+    public void followCreator(@RequestBody FollowRequest request){
+        userService.follow(request.creatorID(), request.userID());
     }
 
 
