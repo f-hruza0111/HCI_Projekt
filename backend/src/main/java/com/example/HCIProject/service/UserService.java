@@ -32,7 +32,13 @@ public class UserService {
         AppUser creator = userRepository.findById(creatorID).orElseThrow(() -> new IllegalStateException("Creator not found"));
         AppUser appUser =  userRepository.findById(userID).orElseThrow(() -> new IllegalStateException("User not found"));
 
-        appUser.getFollowing().add(creator);
+
+        List<AppUser> following = appUser.getFollowing();
+        if(following.contains(creator)){
+            following.remove(creator);
+        } else {
+            appUser.getFollowing().add(creator);
+        }
         userRepository.save(appUser);
     }
 
