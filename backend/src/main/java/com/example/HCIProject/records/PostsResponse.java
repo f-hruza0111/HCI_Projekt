@@ -18,6 +18,8 @@ public record PostsResponse(
 
         String picture,
 
+        boolean userLiked,
+
         List<CommentResponse> comments
 )  {
 

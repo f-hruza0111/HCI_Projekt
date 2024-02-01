@@ -12,7 +12,9 @@ public record ProfileResponse(
        Long id,
 
        String username,
-       List<PostsResponse> posts
+       List<PostsResponse> posts,
+
+       boolean followed
 
 ) {
 }

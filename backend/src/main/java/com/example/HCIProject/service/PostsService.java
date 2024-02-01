@@ -56,6 +56,7 @@ public class PostsService {
                                 p.getCreator().getUsername(),
                                 p.getCreator().getId(),
                                 p.getPictureFileName(),
+                                p.getLikes().contains(user),
                                 p.getComments().stream()
                                         .map(comment -> new CommentResponse(
                                                 comment.getId(),
@@ -63,7 +64,8 @@ public class PostsService {
                                                 comment.getLikes().size(),
                                                 new UserResponse(comment.getCreator().getId(), comment.getCreator().getUsername()),
                                                 comment.getCreatedOn().toString(),
-                                                comment.getLastEdited() == null ? "" : comment.getLastEdited().toString()
+                                                comment.getLastEdited() == null ? "" : comment.getLastEdited().toString(),
+                                                comment.getLikes().contains(user)
                                         ))
                                         .toList()
                         )
@@ -86,6 +88,7 @@ public class PostsService {
                             p.getCreator().getUsername(),
                             p.getCreator().getId(),
                             p.getPictureFileName(),
+                            userID != null && p.getLikes().contains(userRepository.findById(userID).orElseThrow(() -> new IllegalStateException("User with id " + userID + " not found"))),
                             p.getComments().stream()
                                     .map(comment -> new CommentResponse(
                                             comment.getId(),
@@ -93,7 +96,8 @@ public class PostsService {
                                             comment.getLikes().size(),
                                             new UserResponse(comment.getCreator().getId(), comment.getCreator().getUsername()),
                                             comment.getCreatedOn().toString(),
-                                            comment.getLastEdited() == null ? "" : comment.getLastEdited().toString()
+                                            comment.getLastEdited() == null ? "" : comment.getLastEdited().toString(),
+                                            userID != null && comment.getLikes().contains(userRepository.findById(userID).orElseThrow(() -> new IllegalStateException("User with id " + userID + " not found")))
                                     ))
                                     .toList()
                     )

@@ -92,8 +92,8 @@ public class IndexController {
 
 
     @GetMapping("/profile/{id}")
-    public ResponseEntity<ProfileResponse> getProfile(@PathVariable Long id){
-        return ResponseEntity.ok(userService.getProfile(id));
+    public ResponseEntity<ProfileResponse> getProfile(@PathVariable Long id, @RequestParam(required = false) Long userID){
+        return ResponseEntity.ok(userService.getProfile(id, userID));
     }
 
     @GetMapping("/users")

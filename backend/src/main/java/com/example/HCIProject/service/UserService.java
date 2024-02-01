@@ -36,12 +36,12 @@ public class UserService {
         userRepository.save(appUser);
     }
 
-    public ProfileResponse getProfile(Long id) {
-        AppUser user = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("User not found"));
+    public ProfileResponse getProfile(Long id, Long userID) {
+        AppUser profile = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("User not found"));
         return new ProfileResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getPosts().stream()
+                profile.getId(),
+                profile.getUsername(),
+                profile.getPosts().stream()
                         .map(p ->  new PostsResponse(
                                 p.getId(),
                                 p.getTitle(),
@@ -52,6 +52,7 @@ public class UserService {
                                 p.getCreator().getUsername(),
                                 p.getCreator().getId(),
                                 p.getPictureFileName(),
+                                userID != null && p.getLikes().contains(userRepository.findById(userID).orElseThrow(() -> new IllegalStateException("User with id " + userID + " not found"))),
                                 p.getComments().stream()
                                         .map(comment -> new CommentResponse(
                                                 comment.getId(),
@@ -59,10 +60,13 @@ public class UserService {
                                                 comment.getLikes().size(),
                                                 new UserResponse(comment.getCreator().getId(), comment.getCreator().getUsername()),
                                                 comment.getCreatedOn().toString(),
-                                                comment.getLastEdited() == null ? "" : comment.getLastEdited().toString()
+                                                comment.getLastEdited() == null ? "" : comment.getLastEdited().toString(),
+                                                userID != null && comment.getLikes().contains(userRepository.findById(userID).orElseThrow(() -> new IllegalStateException("User with id " + userID + " not found")))
                                         ))
                                         .toList()
-                        )).collect(Collectors.toList())
+                        )).collect(Collectors.toList()),
+                userID != null && userRepository.findById(userID).orElseThrow(() -> new IllegalStateException("User with id " + userID + " not found")).getFollowing().contains(profile)
+
         );
     }
 

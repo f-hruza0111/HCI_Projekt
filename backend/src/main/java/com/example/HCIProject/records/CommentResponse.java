@@ -22,7 +22,9 @@ public record CommentResponse(
 
          String createdOn,
 
-         String lastEdited
+         String lastEdited,
+
+         boolean userLiked
 ) {
 
 }
