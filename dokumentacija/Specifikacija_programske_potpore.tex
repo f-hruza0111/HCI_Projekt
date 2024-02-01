@@ -1,0 +1,625 @@
+\chapter{Specifikacija programske potpore}
+		
+	\section{Funkcionalni zahtjevi}
+			
+		%	\textbf{\textit{dio 1. revizije}}\\
+			
+		%	\textit{Navesti \textbf{dionike} koji imaju \textbf{interes u ovom sustavu} ili  \textbf{su nositelji odgovornosti}. To su prije svega korisnici, ali i administratori sustava, naručitelji, razvojni tim.}\\
+				
+		%	\textit{Navesti \textbf{aktore} koji izravno \textbf{koriste} ili \textbf{komuniciraju sa sustavom}. Oni mogu imati inicijatorsku ulogu, tj. započinju određene procese u sustavu ili samo sudioničku ulogu, tj. obavljaju određeni posao. Za svakog aktora navesti funkcionalne zahtjeve koji se na njega odnose.}\\
+		
+			
+			\noindent \textbf{Dionici:}
+			
+			\begin{packed_enum}
+				
+				\item Voditelj ustanove
+				\item Bolesnici				
+				\item Medicinski djelatnici
+				\begin{packed_enum}
+					\item Fizioterapeuti
+					\item Medicinske sestre
+				\end{packed_enum}
+				\item Administrator (vlasnik sustava)
+				\item Razvojni tim
+				
+			\end{packed_enum}
+			
+			\noindent \textbf{Aktori i njihovi funkcionalni zahtjevi:}
+			
+			
+			\begin{packed_enum}
+				\item  \underbar{Neregistrirani korisnik (inicijator) može:}
+				
+				\begin{packed_enum}
+					
+					\item pregledati popis i opis usluga koje ustanova pruža
+										
+				\end{packed_enum}
+			
+				\item  \underbar{Registrirani bolesnik (inicijator) može:}
+				
+				\begin{packed_enum}
+					
+					\item vidjeti svoj raspored te potvrdu dolaska
+					\item pregledati popis i opis svojih usluga/tretmana
+					
+				\end{packed_enum}
+			
+				\item  \underbar{Administrator (inicijator) može:}
+			
+				\begin{packed_enum}
+					
+					\item upisati sve podatke o uslugama/tretmanima
+					\item registrirati podatke o medicinskim djelatnicima
+					
+				\end{packed_enum}
+			
+				\item  \underbar{Voditelj ustanove (inicijator) može:}
+			
+				\begin{packed_enum}
+					
+					\item upisati sve podatke o uslugama/tretmanima
+					\item registrirati podatke o medicinskim djelatnicima
+					\item pregledati aktivnosti u ustanovi
+					\begin{packed_enum}
+						
+						\item pregled aktivnosti djelatnika
+						\item broj pacijenata po djelatniku
+						\item broj pacijenata po tretmanu/usluzi
+						\item zauzeće pojedinih uređaja
+						
+					\end{packed_enum}
+					
+				\end{packed_enum}
+				\item  \underbar{Medicinski djelatnik (inicijator) može:}
+			
+				\begin{packed_enum}
+					
+					\item upisati podatke o pacijentu
+					\item raditi raspored pacijenata
+					\item evidentirati dolazak pacijenata
+					\item evidentirati stanje pacijenta nakon terapije
+					\begin{packed_enum}
+						\item napredak pacijenta
+						\item zadovoljstvo pacijenta uslugom
+						\item  izjava bolesnika
+						\item vlastiti komentar i zapažanja						
+					\end{packed_enum}
+					\item pregledati aktivnosti u ustanovi (kao voditelj tog dana)
+					\begin{packed_enum}
+						
+						\item broj pacijenata za koje je voditelj tog dana
+						\item broj pacijenata po tretmanu/usluzi
+						\item zauzeće pojedinih uređaja
+						
+					\end{packed_enum}
+				\end{packed_enum}
+			
+				\item  \underbar{Baza podataka (sudionik):}
+				
+				\begin{packed_enum}
+					
+					\item pohranjuje podatke o korisnicima i njihovim ovlastima
+					\item pohranjuje podatke o uslugama koje ustanova nudi
+					\item pohranjuje raspored terapija
+					
+				\end{packed_enum}
+		
+			\end{packed_enum}
+			
+			\eject 
+			
+			
+				
+			\subsection{Obrasci uporabe}
+				
+				%\textbf{\textit{dio 1. revizije}}
+				
+				\subsubsection{Opis obrazaca uporabe}
+				%	\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
+					
+
+					
+				
+					\noindent \underbar{\textbf{UC1 - Registracija medicinskog djelatnika}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik: }Administrator, voditelj ustanove
+					\item  \textbf{Cilj:} Registracija i unos podataka medicinskog djelatnika
+					\item  \textbf{Sudionici:} Baza podataka, medicinski djelatnik
+					\item  \textbf{Preduvjet:} Prijavljenost u sustav
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+		
+					\item[] \begin{packed_enum}
+						
+						\item Administrator/Voditelj odabire opciju za registraciju medicinskog djelatnika
+						\item Administrator/Voditelj upisuje potrebne podatke o djelatniku
+						\item Administrator/Voditelj dobiva obavijest o uspješnoj registraciji djelatnika
+						
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+				\item[] \begin{packed_item}
+					
+					\item[2.a] Unos podataka u nedozvoljenom formatu
+					\item[] \begin{packed_enum}
+						
+						\item Sustav obavještava administratora/voditelja o krivom formatu podataka
+						\item Administrator/Voditelj mijenja podatke u ispravan format ili odustaje od registracije
+						
+					\end{packed_enum}
+				
+					
+				\end{packed_item}							
+				\end{packed_item}
+			
+				\noindent \underbar{\textbf{UC2 - Unos tretmana/usluga u ponudu}}
+			\begin{packed_item}
+				
+				\item \textbf{Glavni sudionik: }Administrator, voditelj ustanove
+				\item  \textbf{Cilj:} Ažurirati popis/opis tretmana/usluga koje ustanova nudi
+				\item  \textbf{Sudionici:} Baza podataka
+				\item  \textbf{Preduvjet:} Prijava voditelja/administratora u sustav
+				\item  \textbf{Opis osnovnog tijeka:}
+				
+				
+				\item[] \begin{packed_enum}
+					
+					\item Administrator/Voditelj odabire opciju za ažuriranje ponude
+					\item Administrator/Voditelj odabire želi li stvoriti novi zapis ili odabire tretman/uslugu koju želi ažurirati
+					\item Administrator/Voditelj upisuje naziv i opis usluge
+					
+				\end{packed_enum}
+									
+			\end{packed_item}
+			
+			\pagebreak
+			\noindent \underbar{\textbf{UC3 - Pregled aktivnosti u ustanovi}}
+		\begin{packed_item}
+			
+			\item \textbf{Glavni sudionik: }Voditelj ustanove
+			\item  \textbf{Cilj:} Pregled aktivnosti djelatnika, broj bolesnika po djelatniku te broj pacijenata po tretmanu/usluzi
+			\item  \textbf{Sudionici:} Baza podataka
+			\item  \textbf{Preduvjet:} Prijava voditelja u sustav
+			\item  \textbf{Opis osnovnog tijeka:}
+			
+			
+			\item[] \begin{packed_enum}
+				
+				\item Voditelj odabire funkcionalnost pregleda aktivnosti u ustanovi
+				\item Voditelj odabire u kojem vremenskom intervalu želi informacije
+				\item Sustav prikazuje tražene informacije
+				
+			\end{packed_enum}
+			
+		\end{packed_item}
+				
+				
+				\noindent \underbar{\textbf{UC4 - Prijava medicinskog djelatnika}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik: }Medicinski djelatnik
+					\item  \textbf{Cilj:} Dobiti pristup funkcijama medicinskog djelatnika
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Registracija medicinskog djelatnika
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					
+					\item[] \begin{packed_enum}
+						
+						\item Medicinski djelatnik unosi svoj adresu elektroničke pošte i lozinku koju mu je dodijelio administrator/voditelj
+						\item Potvrda o ispravnosti unesenih podataka
+						\item Sustav prikazuje aktualne podatke o broju zaraženih Covidom-19 taj dan te trend broja zaraženih u određenom intervalu
+						\item Pristup funkcijama medicinskog djelatnika
+						
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					\item[2.a] Unos neispravne adrese elektroničke pošte/lozinke
+					\item[] \begin{packed_enum}
+						
+						\item Sustav obavještava medicinskog djelatnika o neispravnom unosu podataka i vraća ga na stranicu za prijavu u sustav
+						
+						
+						
+					\end{packed_enum}
+				\end{packed_item}
+			
+				
+				\noindent \underbar{\textbf{UC5 - Registracija bolesnika}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik: }Medicinski djelatnik
+					\item  \textbf{Cilj:} Registracija i unos podataka bolesnika
+					\item  \textbf{Sudionici:} Baza podataka, Bolesnik
+					\item  \textbf{Preduvjet:} Prijava medicinskog djelatnika
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					
+					\item[] \begin{packed_enum}
+						
+						\item Medicinski djelatnik odabire opciju za registraciju bolesnika
+						\item Medicinski djelatnik upisuje MBO bolesnika
+						\item Sustav provjerava postoji li zapis o bolesniku s unesenim MBO-om(bolesnik je prethodno odradio jednu ili više terapija)
+						i automatski registrira bolesnika
+						\item Ako je bolesnik prvi put u ustanovi, medicinski djelatnik upisuje podatke
+						
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+				\item[2.a] Unos podataka u nedozvoljenom formatu
+				\item[] \begin{packed_enum}
+					
+					\item Sustav obavještava medicinskog djelatnika o krivom formatu podataka
+					\item Medicinski djelatnik mijenja podatke u ispravan format ili odustaje od registracije
+					
+					\end{packed_enum}
+				\end{packed_item}
+			
+			
+			\noindent \underbar{\textbf{UC6 - Stvaranje rasporeda tretmana za bolesnika}}
+			\begin{packed_item}
+				
+				\item \textbf{Glavni sudionik: }Medicinski djelatnik
+				\item  \textbf{Cilj:} Stvoriti raspored tretmana/usluga za bolesnika
+				\item  \textbf{Sudionici:} Baza podataka
+				\item  \textbf{Preduvjet:} Registracija bolesnika
+				\item  \textbf{Opis osnovnog tijeka:}
+				
+				
+				\item[] \begin{packed_enum}
+					
+					\item Medicinski djelatnik odabire bolesnika iz liste registriranih bolesnika
+					\item Medicinski djelatnik unosi tretmane i njihov termin
+					\item Sustav potvrđuje ispravnost podataka s obzirom na ograničenja
+					
+				\end{packed_enum}
+				
+				\item  \textbf{Opis mogućih odstupanja:}
+				\item[2.a] Unos podataka koji su u koliziji s rasporedima drugih bolesnika
+				\item[] \begin{packed_enum}
+					
+					\item Sustav obavještava medicinskog djelatnika o zauzetom terminu te ga vraća na stranicu za izradu rasporeda
+					
+					
+					
+				\end{packed_enum}
+			\end{packed_item}
+		
+		\noindent \underbar{\textbf{UC7 - Prihvat i evidencija dolaska bolesnika}}
+		\begin{packed_item}
+			
+			\item \textbf{Glavni sudionik: }Medicinski djelatnik
+			\item  \textbf{Cilj:} Prihvatiti i evidentirati dolazak bolesnika na terapiju
+			\item  \textbf{Sudionici:} Baza podataka, bolesnik
+			\item  \textbf{Preduvjet:} Prijava medicinskog djelatnika
+			\item  \textbf{Opis osnovnog tijeka:}
+			
+			
+			\item[] \begin{packed_enum}
+				
+				\item Medicinski djelatnik odabire funkcionalnost za evidenciju dolaska bolesnika
+				\item Medicinski djelatnik unosi ime i prezime te MBO bolesnika
+				\item Sustav potvrđuje ispravnost podataka
+				\item Sustav osvježava podatke u rasporedu bolesnika te podatke tko je pojedinog bolesnika taj dan prihvatio
+				
+			\end{packed_enum}
+			
+			\item  \textbf{Opis mogućih odstupanja:}
+			\item[2.a] Unos podataka koji su u koliziji s rasporedima drugih bolesnika
+			\item[] \begin{packed_enum}
+				
+				\item Sustav obavještava medicinskog djelatnika o neispravnosti podataka(bolesnik nije registiran ili nema termin taj dan)
+				\item Sustav medicinskog djelatnika vraća na stranicu za evidenciju dolaska bolesnika
+				
+				
+				
+			\end{packed_enum}
+		\end{packed_item}
+	
+	
+		\noindent \underbar{\textbf{UC8 - Evidencija kraja tretmana/usluge}}
+		\begin{packed_item}
+			
+			\item \textbf{Glavni sudionik: }Medicinski djelatnik
+			\item  \textbf{Cilj:} Stvoriti izvještaj iz informacija završnog razgovora
+			\item  \textbf{Sudionici:} Baza podataka, bolesnik
+			\item  \textbf{Preduvjet:} Prijava medicinskog djelatnika
+			\item  \textbf{Opis osnovnog tijeka:}
+			
+			
+			\item[] \begin{packed_enum}
+				
+				\item Medicinski djelatnik odabire bolesnika za kojeg želi napraviti izvješće
+				\item Medicinski djelatnik odabire funkcionalnost za izradu izvješća po završetku terapije		
+				\item Medicinski djelatnik unosi podatke iz intervjua te opcionalno svoje komentare i zapažanja
+				\item Sustav stvara dokument pdf dokument
+				\item Sustav nudi djelatniku mogućnost slanja dokumenta na adresu elektroničke pošte bolesnika
+				
+			\end{packed_enum}
+			
+			\item  \textbf{Opis mogućih odstupanja:}
+			\item[2.a] Odabrani bolesnik nije završio terapiju
+			\item[] \begin{packed_enum}
+				
+				\item Sustav obavještava medicinskog djelatnika da nije moguće stvoriti izvještaj za odabranog bolesnika
+				\item Sustav medicinskog djelatnika vraća na popis bolesnika
+				
+						
+			\end{packed_enum}
+			\item[3.a] Neispravan format podataka
+			\item[] \begin{packed_enum}
+				
+				\item Sustav obavještava medicinskog djelatnika o neispravnom formatu podataka
+				\item Sustav medicinskog djelatnika vraća na stranicu za izradu izvješća
+				
+				
+			\end{packed_enum}
+		
+			\item[4.a] Ne postoji zapis o adresi elektroničke pošte bolesnika
+			\item[] \begin{packed_enum}
+			
+				\item Sustav nudi medicinskom djelatniku da upiše adresu elektroničke pošte bolesnika
+				\item Medicinski djelatnik upisuje adresu koju je dobio od bolesnika
+			
+			
+			\end{packed_enum}		
+		\end{packed_item}
+
+			\pagebreak
+			\noindent \underbar{\textbf{UC9 - Pregled aktivnosti/informacija o uređajima i terminima}}
+			\begin{packed_item}
+				
+				\item \textbf{Glavni sudionik: }Medicinski djelatnik/Voditelj
+				\item  \textbf{Cilj:} Omogućiti djelatniku prikaz
+				broja bolesnika po određenoj usluzi/tretmanu i broja bolesnika za koje su oni registrirani kao voditelji za određeni dan.
+				\item  \textbf{Sudionici:} Baza podataka
+				\item  \textbf{Preduvjet:} Prijava medicinskog djelatnika
+				\item  \textbf{Opis osnovnog tijeka:}
+				
+				
+				\item[] \begin{packed_enum}
+					
+					\item Medicinski djelatnik odabire opciju za pregled aktivnosti
+					\item Sustav prikazuje broj bolesnika po određenoj usluzi/tretmanu, zauzeće pojedinih uređaja i broj bolesnika za koje je djelatnik voditelj taj dan
+				\end{packed_enum}
+				
+			\end{packed_item}
+				
+				
+				\noindent \underbar{\textbf{UC10 - Pregled usluga}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik: }Bolesnik
+					\item  \textbf{Cilj:} Pregledati popis i opis usluga ustanove
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} -
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					
+					\item[] \begin{packed_enum}
+						
+						\item Prikazuje se popis svih usluga koje ustanova nudi
+						
+					\end{packed_enum}
+					
+					
+				\end{packed_item}
+				
+				\noindent \underbar{\textbf{UC11 - Prijava bolesnika u sustav}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik: }Bolesnik
+					\item  \textbf{Cilj:} Dobiti pristup korisničkom sučelju
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Registracija bolesnika
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					
+					\item[] \begin{packed_enum}
+						
+						\item Bolesnik unosi svoj MBO i lozinku koju stvara medicinski djelatnik
+						\item Potvrda o ispravnosti unesenih podataka
+						\item Pristup funkcijama prijavljenog bolesnika
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[2.a] Neispravan MBO/lozinka
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava bolesnika o krivim podatcima i vraća ga na stranicu za prijavu u sustav
+						
+					
+						\end{packed_enum}
+						
+						
+					\end{packed_item}
+				\end{packed_item}
+			\pagebreak
+			\noindent \underbar{\textbf{UC12 - Pregled termina tretmana i evidencije dolaznosti}}
+			\begin{packed_item}
+				
+				\item \textbf{Glavni sudionik: }Bolesnik
+				\item  \textbf{Cilj:} Pregledati preostale tretmane i evidentirane dolaske
+				\item  \textbf{Sudionici:} Baza podataka
+				\item  \textbf{Preduvjet:} Prijava bolesnika
+				\item  \textbf{Opis osnovnog tijeka:}
+				
+				
+				\item[] \begin{packed_enum}
+					
+					\item Bolesnik odabire opciju za prikaz termina i dolaznosti
+					\item Sustav bolesnika preusmjerava na stranicu sa popisom termina tretmana te evidentiranim dolaskom
+				\end{packed_enum}
+				
+				
+				
+			\end{packed_item}
+		
+		
+		\begin{comment}
+				\noindent \underbar{\textbf{UC13 - Zahtjev za slanje izvješća završetka terapije}}
+			\begin{packed_item}
+				
+				\item \textbf{Glavni sudionik: }Bolesnik
+				\item  \textbf{Cilj:} Omogućiti bolesniku da zatraži da mu se izvješće o završenoj terapiji pošalje na adresu elektroničke pošte
+				\item  \textbf{Sudionici:} Baza podataka
+				\item  \textbf{Preduvjet:} Prijava bolesnika
+				\item  \textbf{Opis osnovnog tijeka:}
+				
+				
+				\item[] \begin{packed_enum}
+					
+					\item Bolesnik odabire opciju za slanje izvještaja na adresu elektroničke pošte
+					\item Bolesnik izabire izvješće koje želi iz liste izvješća
+					\item Sustav šalje izvješće na adresu elektroničke pošte bolesnika
+				\end{packed_enum}
+				\item  \textbf{Opis mogućih odstupanja:}
+				
+				\item[] \begin{packed_item}
+					
+					\item[1.a] Ne postoji niti jedno izvješće jer bolesnik nije završio niti jednu terapiju
+					\item[] \begin{packed_enum}
+						
+						\item Sustav obavještava bolesnika da ne postoji niti jedno izvješće i vraća ga na stranicu s odabirom opcija bolesnika					
+						
+					\end{packed_enum}
+					
+					\item[1.b] Bolesnik nije naveo adresu elektroničke pošte pri registraciji(u tom trenutku ju nije koristio)
+					\item[] \begin{packed_enum}
+						
+						\item Sustav omogućuje bolesniku da navede adresu elektroničke pošte na koju želi da mu se pošalje izvješće
+						\item Bolesnik upisuje adresu elektroničke pošte ili odustaje te ga sustav vraća na stranicu s opcijama bolesnika
+						
+						
+					\end{packed_enum}	
+					
+				\end{packed_item}
+			\end{packed_item}	content...
+		\end{comment}
+	
+				\pagebreak
+					
+				\subsubsection{Dijagrami obrazaca uporabe}
+					
+				%	\textit{Prikazati odnos aktora i obrazaca uporabe odgovarajućim UML dijagramom. Nije nužno nacrtati sve na jednom dijagramu. Modelirati po razinama apstrakcije i skupovima srodnih funkcionalnosti.}
+				%\eject	
+				
+				
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{slike/UML123.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{UML obrazaca korištenja UC1 do UC3}
+				\label{fig:uml123}
+			\end{figure}
+			\begin{figure}[H]
+			\includegraphics[scale=0.5]{slike/UML4569.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+			\centering
+			\caption{UML obrazaca korištenja UC4 do UC6 te UC9}
+			\label{fig:um4569}
+		\end{figure}		
+	
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{slike/UML78101112.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{UML obrazaca korištenja UC7 do UC8 te od UC10 do UC12}
+				\label{fig:um78101112}
+			\end{figure}
+			
+			\pagebreak
+			\subsection{Sekvencijski dijagrami}
+				
+				%\textbf{\textit{dio 1. revizije}}\\
+				
+				%\textit{Nacrtati sekvencijske dijagrame koji modeliraju najvažnije dijelove sustava (max. 4 dijagrama). Ukoliko postoji nedoumica oko odabira, razjasniti s asistentom. Uz svaki dijagram napisati detaljni opis dijagrama.}
+				%\eject
+				
+				\textbf{Opis sekvencijskog dijagrama UC5}
+					\begin{flushleft}
+					Medicinski djelatnik započinje registraciju bolesnika odabirom opcije na svom korisničkom sučelju. Djelatnik šalje podatke potrebne za registraciju te sustav, ako su podatci ispravni, šalje upit bazi o postojanju zapisa bolesnika s unesenim MBO-om. Ako takav zapis postoji, sustav javlja medicinskom djelatniku da je registracija uspješna. Ako zapis ne postoji, stvara objekt Korisnik koji se sprema u bazu i kasnije se koristi za autentifikaciju te nakon toga stvara objekt Pacijent koji se također sprema u bazu i kasnije koristi za upravljanje funkcionalnostima pacijenta. Na kraju sustav dojavljuje djelatniku da je registracija uspješna.
+				\end{flushleft}
+			
+					\begin{figure}[H]
+					\includegraphics[scale=0.5]{slike/seq_UC5.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+					\centering
+					\caption{Sekvencijski dijagram UC5}
+					\label{fig:seqUC5}			
+				\end{figure}
+			\eject
+			
+			\textbf{Opis sekvencijskog dijagrama UC6}
+			\begin{flushleft}
+				Medicinski djelatnik započinje izradu rasporeda odabirom opcije za izradu rasporeda iz korisničkog sučelja. Sustav očekuje podatke o tretmanima i terminima. Po primitku podataka, sustav u petlji stvara raspored 10 termina tretmana i provjerava jesu li termini unesenih tretmana zauzeti. Ako su termini zauzeti sustav šalje poruku medicinskom djelatniku o zauzetom terminu te ga vraća na sučelje za izradu rasporeda. Ako su svi termini slobodni, termini se spremaju u bazu podataka te sustav dojavljuje poruku o uspješnom stvaranju rasporeda.
+			\end{flushleft}
+			
+			\begin{figure}[H]
+				\includegraphics[scale=0.5]{slike/seq_UC6.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Sekvencijski dijagram UC6}
+				\label{fig:seqUC6}			
+			\end{figure}
+		
+		
+		\pagebreak
+		\textbf{Opis sekvencijskog dijagrama UC8}
+		\begin{flushleft}
+			Kada medicinski djelatnik želi izraditi izvješće za završetak bolesnikova tretmana, odabire bolesnika za kojeg želi izraditi izvješće. Sustav dohvaća podatke o bolesniku te, ako je bolesnik završio terapiju, djelatnik ima omogućen odabir funkcionalnosti izrade izvješća iz korisničkog sučelja. Sustav traži podatke od djelatnika te nakon što dobije podatke stvara objekt koji generira dokument i pohranjuje ga na poslužitelja koji ustanova koristi za arhivu. Nakon što objekt uspješno generira dokument, sustav o tome obavještava djelatnika i nudi mu opciju slanja dokumenta na adresu elektroničke pošte bolesnika. U slučaju da zapis o adresi elektroničke pošte bolesnika ne postoji, sustav od djelatnika traži da ju unese te ga sprema u bazu i stara objekt zadužen za slanje dokumenta.
+			Ako zapis postoji, sustav stara objekt zadužen za slanje dokumenta.
+		\end{flushleft}
+		
+		\begin{figure}[H]
+			\includegraphics[scale=0.5]{slike/seq_UC8.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+			\centering
+			\caption{Sekvencijski dijagram UC8}
+			\label{fig:seqUC8}			
+		\end{figure}
+	
+	
+	
+	
+	\begin{comment}
+			\textbf{Opis sekvencijskog dijagrama UC13}
+		\begin{flushleft}
+			Bolesnik iz svog korisničkog sučelja izabire pregled izvješća. Sustav iz baze dohvaća sva izvješća te ako ne postoje o tome obavještava bolesnika. Sustav prikazuje bolesniku listu svih izvješća koja su za njega izrađena te bolesnik odabire ono koje želi pregledati i koje želi da mu se pošalje na adresu e-pošte. U slučaju da ne postoji zapis o bolesnikovoj adresi e-pošte (pri registraciji ju nije koristio/naveo), sustav traži od bolesnika da unese adresu e-pošte te mu na nju šalje odabrano izvješće. U suprotnom sustav izvješće šalje na adresu e-pošte bolesnika koja je zapisana u bazi podataka.
+		\end{flushleft}
+		
+		\begin{figure}[H]
+			\includegraphics[scale=0.5]{slike/seq_UC13.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+			\centering
+			\caption{Sekvencijski dijagram UC13}
+			\label{fig:seqUC13}			
+		\end{figure}	content...
+	\end{comment}
+
+			
+			
+	
+		
+	
+				
+		\pagebreak
+		\section{Ostali zahtjevi}
+		
+			%\textbf{\textit{dio 1. revizije}}\\
+		 
+			% \textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}
+			 
+			 \begin{packed_enum}
+			 	\item Dijagnoza se odabire iz liste dijagnoza bolesti prema važećoj MKB (Međunarodna klasifikacija
+			 	bolesti i srodnih zdravstvenih problema)
+			 	
+			 	\item Radno vrijeme ustanove je od 9:00 do 17:00 od ponedjeljka do petka, termini tretmana određeni ovim vremenom
+			 	
+			 	\item Ograničen broj uređaja 
+			 	\item Omogućen unos hrvatskih dijakritičkih znakova (UTF-8 encoding)
+			 	\item Sustav izveden u objektnoj paradigmi
+			 \end{packed_enum}
+			 
+			 
+			 
+	

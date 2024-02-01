@@ -107,7 +107,7 @@ public class PostsService {
         return response;
     }
 
-    public Long createPost(CreatePostRequest request) {
+    public String createPost(CreatePostRequest request) {
         AppUser creator = userRepository.findById(request.creatorID()).orElseThrow(() -> new IllegalStateException("Creator not found"));
 
 
@@ -123,11 +123,11 @@ public class PostsService {
 
          Long id = postRepository.save(post).getId();
 		 if (request.pictureFormat() != null)
-			post.setPictureFileName(id + "_" + post.getTitle() + request.pictureFormat());
+			post.setPictureFileName(id + "_" + post.getTitle().replace(" ", "_") + request.pictureFormat());
 		else
 			post.setPictureFileName("");
          postRepository.save(post);
-        return id;
+        return post.getPictureFileName();
     }
 
     public void editPost(CreatePostRequest request, Long postID){
@@ -182,7 +182,7 @@ public class PostsService {
             likes.add(liked);
         }
 
-
+        userRepository.save(liked);
         postRepository.save(post);
     }
 

@@ -30,10 +30,10 @@ public class Post implements Comparable{
     @ManyToOne
     private AppUser creator;
 
-    @OneToMany
+    @ManyToMany
     private List<BlogComment> comments;
 
-    @OneToMany
+    @ManyToMany
     private List<AppUser> likes;
 
     private LocalDate createdOn;

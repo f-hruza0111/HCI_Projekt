@@ -44,16 +44,18 @@
 
       <% if(!userID) { %>
         <li class="nav-item">
-          <a class="nav-link" href="/registration">Registration</a>
+          
+          <a class="nav-link" href="/registration"> </i> Registration</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="/login">Login</a>
+
+          <a class="nav-link" href="/login"> <i class="fa-solid fa-key"></i> Login</a>
         </li>
      <% } else { %> 
 	 
 	  <li class="nav-item">
-        <a class="nav-link" href="/profile/<%=userID%>">My profile</a>
+        <a class="nav-link" href="/profile/<%=userID%>"> <i class="fa-solid fa-user"></i>My profile</a>
       </li>
 	 
       <li class="nav-item">

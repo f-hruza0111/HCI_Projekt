@@ -43,7 +43,7 @@ app.use(express.static(path.join(__dirname, "images")));
 //TODO: OVO JE SAM TU STAVLJENO OKVIRNO
 //KAD JE USER ULOGIRAN definiran je req.session.userID, inace undefined
 app.get("/", async function (req, res) {
-    let posts = {}
+    let posts = []
     await axios.get(restAPIURL + '/posts', { params: { userID: req.session.userID } })
 		.then(result => {
 			posts = result.data
@@ -121,8 +121,8 @@ app.post("/login",  async function (req, res) {
         }
 
     } catch(err){
-        console.log(error)
-        if(error.status === 403)
+        console.log(err)
+        if(err.status === 403)
         error = "Invalid credentials, please try again"
     }
 
@@ -166,7 +166,7 @@ const storage = multer.diskStorage({
                cb(err)
             } else {
                 // console.log(response)
-                cb(null, response.headers.location + '_' + req.body.title + /*"_" + Date.now() + */ file == undefined ? "" : path.extname(file.originalname))
+                cb(null, response.headers.location /*+ '_' + req.body.title + /*"_" + Date.now() + */ /*file == undefined ? "" : path.extname(file.originalname)*/)
             }
        })
        .catch(error => {
@@ -260,6 +260,7 @@ app.get('/profile/:id', async function(req, res) {
 
 app.get("/like/:postID",  async function (req, res) {
 	
+    console.log('User ' + req.session.userID + ' liking post ' + req.params.postID)
 	await axios.post(restAPIURL + "/like", {
             userID: req.session.userID,
             contentID: req.params.postID

@@ -32,7 +32,12 @@
 		<div class="post">
 			<p class="text-start">Posted by: <a class="fw-bold" href="/profile/<%=post.creatorID%>"><%=post.creatorUsername%></a></p>
 			<hr>
-			<h3 class="my-2 text-start fw-bold"><%=post.title%></h3>
+			<h3 class="my-2 text-start fw-bold"><%=post.title%>, Created on: <%=post.createdOn%>
+				<%if (post.editedOn != ''){%>
+					Last modified: <%=post.editedOn%>
+				<%}%>
+			</h3>
+			
 			<p class="text-start mt-4"><%=post.content%></p>
 			<%if (post.picture && post.picture.length != 0) {%>
 			<image class="border rounded-2 mb-3" src="<%=post.picture%>"></image>
@@ -43,6 +48,7 @@
 				<a class="btn btn-primary" href="/like/<%=post.id%>">Like</a>
 			</div>
 			<%}%>
+			<p>Likes: <%=post.likes%></p>
 		</div>
 		<%}%>
 	</div>

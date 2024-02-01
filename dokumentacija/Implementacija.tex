@@ -1,0 +1,253 @@
+\chapter{Implementacija i korisničko sučelje}
+		
+		
+		\section{Korištene tehnologije i alati}
+		
+		%	\textbf{\textit{dio 2. revizije}}
+			
+			 %\textit{Detaljno navesti sve tehnologije i alate koji su primijenjeni pri izradi dokumentacije i aplikacije. Ukratko ih opisati, te navesti njihovo značenje i mjesto primjene. Za svaki navedeni alat i tehnologiju je potrebno \textbf{navesti internet poveznicu} gdje se mogu preuzeti ili više saznati o njima}.
+			
+			Za izradu dokumentacije korišten je alat LaTex(\url{https://www.latex-project.org/}) u radnom okruženju TeXstudio(\url{https://www.texstudio.org/}) koristeći TeX Live distribuciju(\url{https://www.tug.org/texlive/}) LaTex-a. LaTex je korišten jer je defacto industrijski standard za izradu tehničke dokumentacije i znanstvenih radova.
+			Za izradu dijagrama korišten je besplatni alat za izradu UML dijagrama Visual Paradigm Online(\url{https://online.visual-paradigm.com/features/}) jer nudi široku selekciju paketa komponenti za velik broj UML dijagrama i jednostavan je za korištenje
+			Za izradu relacijske baze podataka korišten je PostgreSQL(\url{https://www.postgresql.org/}) sustav za upravljanje bazama podataka. PostgreSQL poštuje ACID principe pri izvođenju transakcija te se pridržava većine SQL2011 standarda.
+			Fronend aplikacije izrađen je u programskom jeziku JavaScript(\url{https://en.wikipedia.org/wiki/JavaScript}, \url{https://www.w3schools.com/js/}) koristeći besplatnu bibloteku otvorenog koda React(\url{https://reactjs.org/}) koja nudi komponente korisničkog sučelja koje se učinkovito ažuriraju i iscrtavaju te omogućuju stvaranje interaktivnih korisničkih sučelja njihovim grupiranjem. Također, VSCode je korišten kao radno okruženje zbog svoje male veličine i široke potpore za JavaScript. 
+			Backend funkcionalnosti implementirane su u programskom jeziku PHP(\url{https://www.php.net/}, \url{https://www.w3schools.com/php/}), specifično u radnom okviru otvorenog koda Symfony(\url{https://symfony.com/}) koji je skup biblioteka i ponovno iskoristivih PHP komponenti koji nudi dugoročnu potporu i skalabilnost sustava.
+			Izvorni kodovi te resursi i dokumentacija su bili pohranjeni u GitLab{\url{https://about.gitlab.com/}} repozitorij.	
+		
+			
+			\eject 
+		
+	
+		\section{Ispitivanje programskog rješenja}
+			
+			%\textbf{\textit{dio 2. revizije}}\\
+			
+			 %\textit{U ovom poglavlju je potrebno opisati provedbu ispitivanja implementiranih funkcionalnosti na razini komponenti i na razini cijelog sustava s prikazom odabranih ispitnih slučajeva. Studenti trebaju ispitati temeljnu funkcionalnost i rubne uvjete.}
+	
+			Ispitivanje programske potpore je postupak otkrivanja informacija o ispravnosti i kvaliteti programske potpore te omogućuje ispravak i poboljšanje ispitivane programske potpore pronalaženjem kvarova. Ispitni slučaj je osnovna jedinica ispitivanja. Predstavljen je kao uređeni par (ulaz, izlaz), gdje je ulaz ulazni podatak, a izlaz unaprijed zabilježen očekivani izlazni podataka. \\ \\
+			Za potrebe našeg projekta izvršili smo dvije vrste ispitivanja: ispitivanje komponenti i  ispitivanje sustava. 
+			
+			
+			\subsection{Ispitivanje komponenti}
+			%\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
+			
+			Ispitivanje komponenti vrši postupak verifikacije rada programskih dijelova koje je moguće zasebno ispitivati (funkcije, razrede sa više atributa i metoda te neke složenije komponente). Ispitivanje smo proveli koristeći \textit{\textbf{JUnit}} radni okvir, koji olakšava izradu testova i ubrzava provjeru ispravnosti koda.
+			
+			
+			
+			\subsection{Ispitivanje sustava}
+			
+			% \textit{Potrebno je provesti i opisati ispitivanje sustava koristeći radni okvir Selenium\footnote{\url{https://www.seleniumhq.org/}}. Razraditi \textbf{minimalno 4 ispitna slučaja} u kojima će se ispitati redovni slučajevi, rubni uvjeti te poziv funkcionalnosti koja nije implementirana/izaziva pogrešku kako bi se vidjelo na koji način sustav reagira kada nešto nije u potpunosti ostvareno. Ispitni slučaj se treba sastojati od ulaza (npr. korisničko ime i lozinka), očekivanog izlaza ili rezultata, koraka ispitivanja i dobivenog izlaza ili rezultata.\\ }
+			 
+			% \textit{Izradu ispitnih slučajeva pomoću radnog okvira Selenium moguće je provesti pomoću jednog od sljedeća dva alata:}
+			 %\begin{itemize}
+			 %	\item \textit{dodatak za preglednik \textbf{Selenium IDE} - snimanje korisnikovih akcija radi automatskog ponavljanja ispita	}
+			 %	\item \textit{\textbf{Selenium WebDriver} - podrška za pisanje ispita u jezicima Java, C\#, PHP koristeći posebno programsko sučelje.}
+			 %\end{itemize}
+		 	%\textit{Detalji o korištenju alata Selenium bit će prikazani na posebnom predavanju tijekom semestra.}
+			
+			Ispitivanje sustava je postupak ispitivanja završne i potpuno integrirane inačice programske potpore namijenjene distribuciji korisniku. Ovim načinom ispitivanja ispitujemo potpuni sustav u cjelini. Za ispitivanje sustava izradili smo testove pomoću \textit{\textbf{Selenium WebDriver}}, radnog okvira koji omogućuje ispitivanje cijelog sustava programskom interakcijom sa web preglednicima. Radi jednostavnijeg ispitivanja izveli smo Selenium testove unutar JUnit testova.\\ \\
+			Programski testovi su izrađeni za sljedećih 4 funkcionalnosti: 
+			\begin{itemize}
+				\item 	Prijava korisnika u sustav
+				\item  	Registracija medicinskog djelatnika
+				\item 	Upis novih tretmana/usluga 
+				\item	Evidencija dolaska bolesnika na terapiju
+			\end{itemize}	
+			\pagebreak
+			\underline{\textbf{Prijava korisnika u sustav}} (\textit{loginDriver})\\
+			Test ispituje može li se korisnik prijaviti u sustav sa dodijeljenom e-mail adresom i lozinkom.			
+			\begin{figure}[H]
+				\includegraphics[scale=0.36]{slike/sel_test1.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Selenium - test 1}
+				\label{fig:promjene}
+			\end{figure}
+			Ispitni slučajevi koje ispitujemo u testu 1 su ispravan unos podataka, tj. postojeći korisnik \textit{testLogin} i neispravan unos, tj. nepostojeći korisnik \textit{testLoginFail}. Sustav u drugom slučaju treba dojaviti pogrešku.	
+			\begin{figure}[H]
+				\includegraphics[scale=0.37]{slike/sel_isp_1.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Ispitni slučaj - Uspješna prijava}
+				\label{fig:promjene}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.38]{slike/sel_isp_1_2.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Ispitni slučaj - Neuspješna prijava}
+				\label{fig:promjene}
+			\end{figure}
+			\pagebreak
+			\underline{\textbf{Registracija medicinskog djelatnika}} (\textit{registerWorker})\\
+			Test ispituje mogućnost registracije medicinskog djelatnika u sustav od strane voditelja ustanove ili vlasnika sustava.			
+			\begin{figure}[H]
+				\includegraphics[scale=0.36]{slike/sel_test2.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Selenium - test 2}
+				\label{fig:promjene}
+			\end{figure}
+			Ispitni slučajevi koje ispitujemo u testu 2 su uspješna registracija medicinskog djelatnika \textit{registerWorkerSuccess} i neuspješna registracija medicinskog djelatnika, tj. pokušaj registracije postojećeg djelatnika \textit{registerWorkerFail}. Sustav u drugom slučaju treba dojaviti pogrešku.	
+			\begin{figure}[H]
+				\includegraphics[scale=0.38]{slike/sel_isp_3_1.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Ispitni slučaj - Uspješna registracija}
+				\label{fig:promjene}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.38]{slike/sel_isp_3.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Ispitni slučaj - Neuspješna registracija}
+				\label{fig:promjene}
+			\end{figure}
+			\pagebreak
+			\underline{\textbf{Upis novih tretmana/usluga}} (\textit{addService})\\
+			Test ispituje mogućnost upisa novih tretmana odnosno usluga u sustav.			
+			\begin{figure}[H]
+				\includegraphics[scale=0.39]{slike/sel_test3.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Selenium - test 3}
+				\label{fig:promjene}
+			\end{figure}
+			Ispitni slučajevi koje ispitujemo u testu 3 su uspješan upis tretmana \textit{testAddService} i neuspješan upis tretmana, tj. pokušaj upisa već postojećeg tretmana odnosno tretmana istog naziva \textit{testAddServiceFail}. Sustav u drugom slučaju treba dojaviti pogrešku.	
+			\begin{figure}[H]
+				\includegraphics[scale=0.39]{slike/sel_isp_2_1.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Ispitni slučaj - Uspješan unos tretmana}
+				\label{fig:promjene}
+			\end{figure}
+			\begin{figure}[H]
+				\includegraphics[scale=0.39]{slike/sel_isp_2_2.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Ispitni slučaj - Neuspješan unos tretmana}
+				\label{fig:promjene}
+			\end{figure}
+			\pagebreak
+			\underline{\textbf{Evidencija dolaska bolesnika na terapiju}} (\textit{logAppointment})\\
+			Test ispituje mogućnost evidentiranja dolaska pristiglog bolesnika na terapiju.			
+			\begin{figure}[H]
+				\includegraphics[scale=0.37]{slike/sel_test4.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Selenium - test 4}
+				\label{fig:promjene}
+			\end{figure}
+			Ispitni slučaj koji ispitujemo u testu 4 je uspješna evidencija dolaska bolesnika na terapiju. Ispitni slučaj je ugrađen u testu.
+			
+			\begin{figure}[H]
+				\includegraphics[scale=0.32]{slike/konst.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Konstante korištene u testovima}
+				\label{fig:promjene}
+			\end{figure}
+			\underline{\textbf{Rezultati ispitivanja sustava}}\\ 
+			Ispitni slučajevi su izvedeni kao JUnit testovi i ostvarili su zadovoljavajuće rezultate. Nisu nastupile pogreške niti zatajenja sustava.
+			\begin{figure}[H]
+				\includegraphics[scale=0.45]{slike/sel_rezultati.JPG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Rezultati ispitivanja sustava}
+				\label{fig:promjene}
+			\end{figure}
+			\eject 
+		
+		
+		\section{Dijagram razmještaja}
+			
+			%\textbf{\textit{dio 2. revizije}}
+			
+			 %\textit{Potrebno je umetnuti \textbf{specifikacijski} dijagram razmještaja i opisati ga. Moguće je umjesto specifikacijskog dijagrama razmještaja umetnuti dijagram razmještaja instanci, pod uvjetom da taj dijagram bolje opisuje neki važniji dio sustava.}
+			
+			Dijagram razmještaja predstavlja UML dijagram koji opisuje topologiju sustava odnosno odnos sklopovskih i programskih dijelova. Naš dijagram razmještaja prikazan slikom 5.1 predstavlja specifikacijski dijagram razmještaja. \\ \\
+			Klijentsko računalo peko web preglednika pristupa našoj web aplikaciji. Pritom se ostvaruje HTTP(S) veza između klijentskog računala i poslužiteljskog računala. \\ \\
+			Poslužiteljsko računalo se sastoji od frontend dijela aplikacije koji je razmješten (engl. deploy) na platformi Netlify i web poslužitelja koji je ostvaren  backend dijelom aplikacije te razmješten (engl. deploy) na platformi DigitalOcean. Frontend i backend komuniciraju također već spomenutim HTTP(S) protokolom. \\ \\
+			Na platformi Heroku je razmještena baza podataka sa 5 entiteta. Backend i baza podataka su međusobno ovisni te razmjenjuju podatke. \\ \\
+			Također sa poslužiteljskim računalom je u vezi i servis Sendinblue koji služi za isporuku e-pošte iz aplikacije.
+			
+			\begin{figure}[H]
+				\includegraphics[scale=0.38]{slike/deploymentDiagram.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Dijagram razmještaja web aplikacije}
+				\label{fig:promjene}
+			\end{figure}
+			
+			\eject 
+		
+		\section{Upute za puštanje u pogon}
+		
+			%\textbf{\textit{dio 2. revizije}}\\
+		
+			 %\textit{U ovom poglavlju potrebno je dati upute za puštanje u pogon (engl. deployment) ostvarene aplikacije. Na primjer, za web aplikacije, opisati postupak kojim se od izvornog kôda dolazi do potpuno postavljene baze podataka i poslužitelja koji odgovara na upite korisnika. Za mobilnu aplikaciju, postupak kojim se aplikacija izgradi, te postavi na neku od trgovina. Za stolnu (engl. desktop) aplikaciju, postupak kojim se aplikacija instalira na računalo. Ukoliko mobilne i stolne aplikacije komuniciraju s poslužiteljem i/ili bazom podataka, opisati i postupak njihovog postavljanja. Pri izradi uputa preporučuje se \textbf{naglasiti korake instalacije uporabom natuknica} te koristiti što je više moguće \textbf{slike ekrana} (engl. screenshots) kako bi upute bile jasne i jednostavne za slijediti.}
+			
+			Puštanje baze podataka u pogon:
+			\begin{packed_item}
+				\item PostgreSQL baza se postavlja na Heroku poslužitelja
+				\item Podatci za spajanje na bazu se unose u konfiguracijsku datoteku backend-a
+				\item Pokreće se migracijska skripta objektno-relacijskog rukovoditelja na backend-u kako bi se iz programiranih entiteta stvorile tablice relacijske baze podataka
+				\item Ostatak posla obavlja objektno objektno-relacijskog rukovoditelja (dohvaćanje, spremanje ažuriranje podataka u bazi)
+			\end{packed_item}
+		
+			Puštanje frontend-a u pogon:
+			\begin{packed_item}
+				\item U direktoriju gdje se nalazi frontend kod pokreće se \textit{npm build} naredba iz naredbenog retka
+				\item Nakon toga se na Netlify servis(\url{https://www.netlify.com/}) postavi kod iz direktorija u kojem je bila pokrenuta \textit{npm build} naredba
+				\item Frontend u sebi sadrži vezu na backend te nije potrebno nikakvo dodatno konfiguriranje
+			
+			
+				\begin{figure}[H]
+					\includegraphics[scale=0.4]{slike/frontend\_2.jpeg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+					\centering
+					\caption{npm run naredba}
+					\label{fig:npmnaredba}
+				\end{figure}
+			
+				\begin{figure}[H]
+					\includegraphics[scale=0.3]{slike/frontend\_1.jpeg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+					\centering
+					\caption{Drag and drop na Netlify poslužitelj}
+					\label{fig:netlify}
+				\end{figure}
+			\end{packed_item}
+		
+			Puštanje backend-a u pogon:
+			\begin{packed_item}
+				\item Koristi se račun na servisu za objavu aplikacija (engl. web host), kao što je DigitalOcean (\url{https://www.digitalocean.com/}). Ako se koristi DigitalOcean, u njemu se stvara novi poslužitelj (engl. droplet).
+				\item Stvara se direktorij gdje će se nalaziti backend aplikacija, npr. \textit{/var/www/be/fizikalna-terapija/} te se u njega kopira izvorni kod backenda aplikacije pomoću naredbe \textit{git clone https://gitlab.com/progi\_tim\_2022/fizikalna-terapija.git}.
+				\item Konfiguriraju se varijable okruženja (engl. environment variables) na poslužitelju. To se radi pozicioniranjem u direktorij \textit{/var/www/be/fizikalna-terapija/IzvorniKod/backend/} te uređivanjem datoteke \textit{.env}. Ovdje se dodaju linije \textit{APP\_ENV=prod} te \textit{APP\_DEBUG=0}.
+				\item Zatim se instalira php7.2-xml na poslužitelju pomoću naredbe \textit{sudo apt-get install php7.2-xml}, kako bi se omogućilo parsiranje XML datoteka.
+				\item Projektne se ovisnosti instaliraju pomoću naredbe \textit{composer install} te se pokreće migracijska skripta na backend-u kako bi se iz programiranih entiteta stvorile tablice relacijske baze podataka. Migracija se pokreće naredbom \textit{php bin/console doctrine:migrations:migrate} nakon pozicioniranja u direktorij \textit{/var/www/be/fizikalna-terapija/IzvorniKod/backend/}. Provjera je li migracija uspješno izvršena moguća je pomoću naredbe \textit{php bin/console doctrine:migrations:status}. Migracija je uspješno izvršena ako se u naredbenom retku ispiše \textit{No migrations to execute.}
+				\item Instalira se potrebna programska podrška nužna za izvedbu projekta u radnom okviru Symfony. To se može napraviti pomoću Symfonyjevog alata Symfony CLI kojeg se instalira pokretanjem naredbe \textit{wget https://get.symfony.com/cli/installer -O - | bash} u naredbenom retku. Nakon instalacije navedenog programa moguće je testirati jesu li potrebni programi instalirani pomoću naredbe \textit{symfony check:requirements}.
+				\item Poslužitelj se podešava uređivanjem datoteke \textit{/etc/nginx/sites-available/default} te se dodaje sljedeći sadržaj:
+				
+				\begin{figure}[H]
+					\includegraphics[scale=0.38]{slike/backend_1.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+					\centering
+					\caption{Postavke za poslužitelj (1)}
+					\label{fig:nginxconfig1}
+				\end{figure}
+			
+				\begin{figure}[H]
+					\includegraphics[scale=0.38]{slike/backend_2.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+					\centering
+					\caption{Postavke za poslužitelj (2)}
+					\label{fig:nginxconfig2}
+				\end{figure}
+			
+			
+				\item Dodani se sadržaj sprema i provjerava se ispravnost konfiguracije pomoću naredbe \textit{sudo nginx -t}. Ako je konfiguracija ispravna, ponovno se pokreće nginx poslužitelj pomoću naredbe \textit{sudo systemctl restart nginx}.
+				\item Kako bi HTTPS bio omogućen na poslužitelju, instalira se SSL certifikat kao što je onaj koji nudi Let's Encrypt. To se može napraviti pomoću naredbe \textit{sudo certbot --nginx -d domena} gdje se \textit{domena} zamjenjuje nazivom domene na kojoj će se nalaziti backend aplikacije. Nakon toga se u datoteci \textit{/etc/nginx/sites-available/default} u bloku \textit{server} dodaje linija \textit{proxy\_set\_header X-Forwarded-Proto https;}. Nakon toga se ponovno pokreće nginx poslužitelj pomoću naredbe \textit{sudo systemctl restart nginx}.
+				\item Kroz vatrozid se omogućava pristup backend aplikaciji. To se može napraviti pomoću naredbe \textit{sudo ufw allow 'Nginx HTTPS'}. Sprema se i provjerava se ispravnost konfiguracije pomoću naredbe \textit{sudo ufw status}. Ako je konfiguracija ispravna, ponovno se pokreće vatrozid pomoću naredbe \textit{sudo systemctl restart ufw}.
+				\item Aplikacija se pokreće pomoću naredbe \textit{symfony server:start -d --port=8000} u direktoriju \textit{/var/www/be/fizikalna-terapija/IzvorniKod/backend/public}:
+				
+				
+				\begin{figure}[H]
+					\includegraphics[scale=0.38]{slike/backend_3.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+					\centering
+					\caption{Pokretanje backend poslužitelja Symfony}
+					\label{fig:symfonystart}
+				\end{figure}
+			
+			
+			\end{packed_item}
+
+			
+			 %\textit{Dovršenu aplikaciju potrebno je pokrenuti na javno dostupnom poslužitelju. Studentima se preporuča korištenje neke od sljedećih besplatnih usluga: \href{https://aws.amazon.com/}{Amazon AWS}, \href{https://azure.microsoft.com/en-us/}{Microsoft Azure} ili \href{https://www.heroku.com/}{Heroku}. Mobilne aplikacije trebaju biti objavljene na F-Droid, Google Play ili Amazon App trgovini.}
+			
+			
+			\eject 

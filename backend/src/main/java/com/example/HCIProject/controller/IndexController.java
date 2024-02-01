@@ -37,7 +37,7 @@ public class IndexController {
     @PostMapping("/post")
     public ResponseEntity<?> createPost(@RequestBody CreatePostRequest request){
 //        System.out.println(image.getName());
-        return ResponseEntity.created(URI.create(String.valueOf(postsService.createPost(request)))).build();
+        return ResponseEntity.created(URI.create(postsService.createPost(request))).build();
     }
 
     @PutMapping("/post/{postID}")
@@ -75,13 +75,13 @@ public class IndexController {
         postsService.deleteComment(request);
     }
 
-    @PostMapping("/post/like")
-    public void likePost(LikeRequest request){
+    @PostMapping("/like")
+    public void likePost(@RequestBody LikeRequest request){
         postsService.likePost(request);
     }
 
     @PostMapping("/comment/like")
-    public void likeComment(LikeRequest request){
+    public void likeComment(@RequestBody LikeRequest request){
         postsService.likeComment(request);
     }
 
