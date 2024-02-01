@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="/css/style.css" rel="stylesheet" />
+    <title>Blog App Profile</title>
+    <%- include('./partials/bootstrap') %>
+</head>
+<body class="bg-light">
+    <%- include('./partials/navbar') %>
+
+    <% if(err) { %>
+        <div class="alert alert-danger" role="alert">
+            <%=err%>
+        </div>
+    <% } %>
+	
+	<div style="height: 1vh"></div>
+	
+	<div class="container mt-5 pt-2">
+	<div class="row m-1">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4 d-flex justify-content-center align-items-center">
+		<% if (profileID != userID) {%>
+			<h1>Posts by: <%=username%></h1>
+		<%} else {%>
+			<h1>My profile: <%=username%></h1>
+		<%}%>
+		</div>
+		<% if (profileID != userID) {%>
+		<div class="col-lg-4 d-flex justify-content-start align-items-center">
+			<%if (!followed) {%>
+			<a href="/follow/<%=profileID%>" class ="btn btn-primary">Follow</a>
+			<%} else {%>
+			<a href="/follow/<%=profileID%>" class ="btn btn-danger">Unfollow</a>
+			<%}%>
+		</div>
+		<%}%>
+	</div>
+	</div>
+	
+	<%- include('./partials/posts') %>
+	
+</body>
+</html>

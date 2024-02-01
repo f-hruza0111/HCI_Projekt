@@ -20,6 +20,19 @@
 .text-grey {
 	color: grey;
 }
+
+.username {
+	font-weight: bold;
+	color: black;
+}
+
+.max-vh-30 {
+	max-height: 30vh;
+}
+
+.ml-2 {
+	margin-left: 0.5rem;
+}
 	
 img {
 		max-width: 100%;

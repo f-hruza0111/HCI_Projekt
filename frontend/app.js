@@ -37,7 +37,7 @@ app.set('view engine', 'ejs');
 
 
 app.use(express.static(path.join(__dirname, "views")));
-app.use(express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 
 //TODO: OVO JE SAM TU STAVLJENO OKVIRNO
@@ -49,7 +49,7 @@ app.get("/", async function (req, res) {
 			posts = result.data
 	})
     .catch(err => console.log(err))
-	console.log(posts)
+	
     res.render('index', 
         {
             err: undefined, 
@@ -238,7 +238,7 @@ app.post("/comment",  authorize, async function(req, res) {
 			console.log(err)
        })
 	
-	res.redirect(req.headers.referer + '#' + req.params.postID)
+	res.redirect(req.headers.referer + '#' + req.body.postID)
 })
 
 app.get('/search', async function(req, res) {
@@ -257,19 +257,27 @@ app.get('/profile/:id', async function(req, res) {
     let err = undefined
     const id = req.params.id
     let profile = {}
+	let userIDParam = ''
+	if (req.session.userID)
+		userIDParam = '?userID=' + req.session.userID
 
     try{
-        const response = await axios.get(restAPIURL + '/profile/' + id)
-        console.log(response)
+        const response = await axios.get(restAPIURL + '/profile/' + id + userIDParam)
         profile = response.data
     } catch(error){
         err = "Something went wrong when getting profile"
         console.log(error)
     }
 
-    //TODO dovrsit
-    // res.render('profile', {})
-    res.send("OK")
+	console.log(profile)
+    res.render('profile', {
+		userID: req.session.userID,
+		err: err,
+		posts: profile.posts,
+		username: profile.username,
+		profileID: profile.id,
+		followed: profile.followed
+	})
 })
 
 
@@ -286,6 +294,21 @@ app.get("/like/:postID", authorize, async function (req, res) {
        })
 	
 	res.redirect(req.headers.referer + '#' + req.params.postID)
+})
+
+app.get("/follow/:profileID", authorize, async function (req, res) {
+	
+	await axios.post(restAPIURL + "/follow", {
+            userID: req.session.userID,
+            creatorID: req.params.profileID
+        })
+       .catch(error => {
+            // console.log("ERROR")
+            err = error.response.data
+			console.log(err)
+       })
+	
+	res.redirect('back')
 })
 
 
