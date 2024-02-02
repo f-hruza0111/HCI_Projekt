@@ -23,7 +23,7 @@ public class BlogComment {
     @Column(length = 5000)
     private String content;
 
-    @OneToMany
+    @ManyToMany
     private List<AppUser> likes;
 
     @ManyToOne

@@ -117,16 +117,16 @@ app.post("/login",  async function (req, res) {
         if(response.status === 200){
             req.session.userID = response.data
         } else {
-            error = "Invalid credentials!"
+            error = "Invalid credentials,  please try again!"
         }
 
     } catch(err){
         console.log(err)
-        if(err.status === 403)
         error = "Invalid credentials, please try again"
     }
 
 
+    console.log(error)
    if(error){
         res.render('login', {err:error, userID: undefined})
    } else {
@@ -165,8 +165,10 @@ const storage = multer.diskStorage({
                 // res.render('postForm', {err: err, userID: req.session.userID})
                cb(err)
             } else {
-                // console.log(response)
-                cb(null, response.headers.location /*+ '_' + req.body.title + /*"_" + Date.now() + */ /*file == undefined ? "" : path.extname(file.originalname)*/)
+                console.log("Ime slike " + decodeURIComponent(response.headers.location))
+
+                
+                cb(null, decodeURIComponent(response.headers.location) /*+ '_' + req.body.title + /*"_" + Date.now() + */ /*file == undefined ? "" : path.extname(file.originalname)*/)
             }
        })
        .catch(error => {
@@ -294,6 +296,21 @@ app.get("/like/:postID", authorize, async function (req, res) {
        })
 	
 	res.redirect(req.headers.referer + '#' + req.params.postID)
+})
+
+app.get("/comment/like/:commentID", authorize, async function (req, res) {
+	
+    console.log('User ' + req.session.userID + ' liking comment ' + req.params.commentID)
+	await axios.post(restAPIURL + "/comment/like", {
+            userID: req.session.userID,
+            contentID: req.params.commentID
+        })
+       .catch(error => {
+            // console.log("ERROR")
+            err = error.response.data
+       })
+	
+	res.redirect(req.headers.referer + '#' + req.params.commentID)
 })
 
 app.get("/follow/:profileID", authorize, async function (req, res) {

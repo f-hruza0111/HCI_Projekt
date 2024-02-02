@@ -31,7 +31,7 @@ public class AppUser {
     @OneToMany(mappedBy = "creator")
     private List<Post> posts;
 
-    @OneToMany
+    @ManyToMany
     private List<AppUser> following;
 
     public AppUser(Long id, String email, String username, String password) {

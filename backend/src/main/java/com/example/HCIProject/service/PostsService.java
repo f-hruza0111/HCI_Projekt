@@ -122,11 +122,13 @@ public class PostsService {
                 .build();
 
          Long id = postRepository.save(post).getId();
-		 if (request.pictureFormat() != null)
-			post.setPictureFileName(id + "_" + post.getTitle().replace(" ", "_") + request.pictureFormat());
-		else
-			post.setPictureFileName("");
+        if (request.pictureFormat() != null)
+            post.setPictureFileName(id + "_" + post.getTitle().replace(" ", "_") + request.pictureFormat());
+        else
+            post.setPictureFileName("");
          postRepository.save(post);
+
+        System.out.println(post.getPictureFileName());
         return post.getPictureFileName();
     }
 
